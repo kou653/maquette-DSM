@@ -1,0 +1,72 @@
+export type UserRole = "administrateur" | "agriculteur" | "commanditaire"
+
+export interface User {
+  id: string
+  nom: string
+  email: string
+  role: UserRole
+  projetsAffectes: string[]
+}
+
+export interface Projet {
+  id: string
+  nom: string
+  description: string
+  dateDebut: string
+  dateFin: string
+  region: string
+  status: "actif" | "termine" | "en_pause"
+  totalParcelles: number
+  totalPlants: number
+  tauxSurvie: number
+}
+
+export interface Parcelle {
+  id: string
+  nom: string
+  ville: string
+  cooperative: string
+  projetId: string
+  superficie: number
+  coordonnees: { lat: number; lng: number }
+}
+
+export interface Plant {
+  id: string
+  especeId: string
+  especeNom: string
+  parcelleId: string
+  parcelleNom: string
+  ville: string
+  coordonnees: { lat: number; lng: number }
+  datePlantation: string
+  status: "vivant" | "mort"
+}
+
+export interface Espece {
+  id: string
+  nomCommun: string
+  nomScientifique: string
+}
+
+export interface Cooperative {
+  id: string
+  nom: string
+  contact: string
+  region: string
+  email: string
+}
+
+export interface MonitoringData {
+  especeId: string
+  parcelleId: string
+  plantsMisEnTerre: number
+  plantsVivants: number
+  plantsMorts: number
+  tauxSurvie: number
+  documentation?: {
+    notes: string
+    photos: string[]
+    date: string
+  }[]
+}
