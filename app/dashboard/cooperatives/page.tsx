@@ -77,7 +77,7 @@ export default function CooperativesPage() {
             </div>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-primary hover:bg-primary/90">
+                <Button className="bg-primary hover:bg-[var(--forest-green-hover)]">
                   <Plus className="w-4 h-4 mr-2" />
                   Ajouter
                 </Button>
@@ -107,7 +107,7 @@ export default function CooperativesPage() {
                     <Button variant="outline" onClick={() => setDialogOpen(false)}>
                       Annuler
                     </Button>
-                    <Button className="bg-primary hover:bg-primary/90">Enregistrer</Button>
+                    <Button className="bg-primary hover:bg-[var(--forest-green-hover)]">Enregistrer</Button>
                   </div>
                 </div>
               </DialogContent>
@@ -116,7 +116,7 @@ export default function CooperativesPage() {
         </div>
 
         {/* Admin Badge */}
-        <Badge className="bg-primary/20 text-primary border-primary/30">
+        <Badge className="bg-primary/20 text-foreground border-primary/30">
           Accès Administrateur uniquement
         </Badge>
 

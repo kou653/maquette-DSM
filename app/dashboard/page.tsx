@@ -54,15 +54,15 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-6 forest-surface">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Tableau de bord</h1>
-            <p className="text-muted-foreground">Vue d'ensemble de tous les projets</p>
+            <p className="text-foreground/70">Vue d'ensemble de tous les projets</p>
           </div>
           {isAdmin && (
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button className="bg-primary hover:bg-[var(--forest-green-hover)] text-primary-foreground">
               <Plus className="w-4 h-4 mr-2" />
               Ajouter un projet
             </Button>
@@ -70,7 +70,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Carrousel d'images */}
-        <Card className="bg-card border-border overflow-hidden relative group">
+        <Card className="bg-card border-border overflow-hidden relative group shadow-sm shadow-primary/5">
           <div className="relative aspect-[21/9] w-full">
             {carouselImages.map((img, index) => (
               <div
@@ -84,8 +84,10 @@ export default function DashboardPage() {
                   alt={img.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-8">
-                  <h3 className="text-white font-semibold text-xl md:text-2xl">{img.title}</h3>
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent flex items-end p-8">
+                  <div className="forest-highlight max-w-xl rounded-xl px-4 py-3">
+                    <h3 className="text-foreground font-semibold text-xl md:text-2xl">{img.title}</h3>
+                  </div>
                 </div>
               </div>
             ))}
@@ -93,13 +95,13 @@ export default function DashboardPage() {
             {/* Contrôles */}
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-accent text-foreground border border-border p-2 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-accent text-foreground border border-border p-2 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
@@ -110,7 +112,7 @@ export default function DashboardPage() {
                 <div
                   key={index}
                   className={`w-2 h-2 rounded-full transition-all ${
-                    index === currentImage ? "bg-white w-6" : "bg-white/40"
+                    index === currentImage ? "bg-primary w-6" : "bg-primary/25"
                   }`}
                 />
               ))}
@@ -120,53 +122,53 @@ export default function DashboardPage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-card border-border">
+          <Card className="bg-card border-border shadow-sm shadow-primary/5">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <FolderKanban className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Projets actifs</p>
+                  <p className="text-sm text-foreground/70">Projets actifs</p>
                   <p className="text-2xl font-bold text-foreground">{projets.length}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card className="bg-card border-border shadow-sm shadow-primary/5">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-chart-2/10 rounded-lg">
                   <MapPin className="w-5 h-5 text-chart-2" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Total parcelles</p>
+                  <p className="text-sm text-foreground/70">Total parcelles</p>
                   <p className="text-2xl font-bold text-foreground">{totalParcelles}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card className="bg-card border-border shadow-sm shadow-primary/5">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-chart-3/10 rounded-lg">
                   <Leaf className="w-5 h-5 text-chart-3" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Total plants</p>
+                  <p className="text-sm text-foreground/70">Total plants</p>
                   <p className="text-2xl font-bold text-foreground">{totalPlants.toLocaleString()}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card className="bg-card border-border shadow-sm shadow-primary/5">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <TrendingUp className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Taux de survie moyen</p>
+                  <p className="text-sm text-foreground/70">Taux de survie moyen</p>
                   <p className="text-2xl font-bold text-foreground">{avgSurvival.toFixed(1)}%</p>
                 </div>
               </div>
@@ -185,7 +187,7 @@ export default function DashboardPage() {
                   key={projet.id}
                   className={`bg-card border-border transition-all ${
                     hasAccess
-                      ? "cursor-pointer hover:border-primary/50 hover:bg-card/80"
+                      ? "cursor-pointer hover:border-primary/50 hover:bg-accent/40"
                       : "opacity-50 cursor-not-allowed"
                   }`}
                   onClick={() => hasAccess && router.push(`/dashboard/projet/${projet.id}`)}
@@ -198,35 +200,35 @@ export default function DashboardPage() {
                         </div>
                         <div>
                           <CardTitle className="text-base text-foreground">{projet.nom}</CardTitle>
-                          <p className="text-xs text-muted-foreground">{projet.region}</p>
+                          <p className="text-xs text-foreground/65">{projet.region}</p>
                         </div>
                       </div>
                       <Badge
                         variant={projet.status === "actif" ? "default" : "secondary"}
-                        className={projet.status === "actif" ? "bg-primary/20 text-primary border-primary/30" : ""}
+                        className={projet.status === "actif" ? "bg-primary/20 text-foreground border-primary/30" : ""}
                       >
                         {projet.status === "actif" ? "Actif" : projet.status === "termine" ? "Terminé" : "En pause"}
                       </Badge>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{projet.description}</p>
+                    <p className="text-sm text-foreground/70 mb-4 line-clamp-2">{projet.description}</p>
                     <div className="grid grid-cols-3 gap-4 text-center">
                       <div>
                         <p className="text-lg font-semibold text-foreground">{projet.totalParcelles}</p>
-                        <p className="text-xs text-muted-foreground">Parcelles</p>
+                        <p className="text-xs text-foreground/65">Parcelles</p>
                       </div>
                       <div>
                         <p className="text-lg font-semibold text-foreground">{projet.totalPlants.toLocaleString()}</p>
-                        <p className="text-xs text-muted-foreground">Plants</p>
+                        <p className="text-xs text-foreground/65">Plants</p>
                       </div>
                       <div>
-                        <p className="text-lg font-semibold text-primary">{projet.tauxSurvie}%</p>
-                        <p className="text-xs text-muted-foreground">Survie</p>
+                        <p className="text-lg font-semibold text-foreground">{projet.tauxSurvie}%</p>
+                        <p className="text-xs text-foreground/65">Survie</p>
                       </div>
                     </div>
                     {!hasAccess && (
-                      <p className="text-xs text-muted-foreground mt-3 text-center italic">
+                      <p className="text-xs text-foreground/65 mt-3 text-center italic">
                         Vous n'avez pas accès à ce projet
                       </p>
                     )}

@@ -222,8 +222,8 @@ export default function PlantsPage({ params }: Props) {
                           variant={plant.status === "vivant" ? "default" : "destructive"}
                           className={
                             plant.status === "vivant"
-                              ? "bg-primary/20 text-primary border-primary/30"
-                              : "bg-destructive/20 text-destructive border-destructive/30"
+                              ? "bg-primary/20 text-foreground border-primary/30"
+                              : "bg-destructive/20 text-foreground border-destructive/30"
                           }
                         >
                           {plant.status === "vivant" ? (

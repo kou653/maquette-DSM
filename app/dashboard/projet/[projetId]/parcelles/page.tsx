@@ -168,7 +168,7 @@ export default function ParcellesPage({ params }: Props) {
                           variant="ghost"
                           size="sm"
                           onClick={() => router.push(`/dashboard/projet/${projetId}/carte?parcelle=${parcelle.id}`)}
-                          className="text-primary hover:text-primary/80"
+                          className="text-foreground hover:bg-accent hover:text-foreground"
                         >
                           <MapPinned className="w-4 h-4 mr-1" />
                           Voir sur la carte

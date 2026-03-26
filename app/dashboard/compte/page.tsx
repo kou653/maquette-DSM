@@ -24,7 +24,7 @@ export default function ComptePage() {
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case "administrateur":
-        return "bg-primary/20 text-primary border-primary/30"
+        return "bg-primary/20 text-foreground border-primary/30"
       case "agriculteur":
         return "bg-chart-3/20 text-chart-3 border-chart-3/30"
       case "commanditaire":
@@ -72,7 +72,7 @@ export default function ComptePage() {
             {/* Avatar and Name */}
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="text-xl font-bold text-primary">
+                <span className="text-xl font-bold text-foreground">
                   {user.nom.split(" ").map((n) => n[0]).join("")}
                 </span>
               </div>
@@ -154,7 +154,7 @@ export default function ComptePage() {
                       </div>
                       <Badge
                         variant={projet.status === "actif" ? "default" : "secondary"}
-                        className={projet.status === "actif" ? "bg-primary/20 text-primary border-primary/30 text-xs" : "text-xs"}
+                        className={projet.status === "actif" ? "bg-primary/20 text-foreground border-primary/30 text-xs" : "text-xs"}
                       >
                         {projet.status === "actif" ? "Actif" : "Terminé"}
                       </Badge>

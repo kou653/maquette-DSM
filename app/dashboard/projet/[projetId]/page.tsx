@@ -86,7 +86,7 @@ export default function ProjetDashboard({ params }: Props) {
               <h1 className="text-2xl font-bold text-foreground">{projet.nom}</h1>
               <Badge
                 variant={projet.status === "actif" ? "default" : "secondary"}
-                className={projet.status === "actif" ? "bg-primary/20 text-primary border-primary/30" : ""}
+                className={projet.status === "actif" ? "bg-primary/20 text-foreground border-primary/30" : ""}
               >
                 {projet.status === "actif" ? "Actif" : projet.status === "termine" ? "Terminé" : "En pause"}
               </Badge>

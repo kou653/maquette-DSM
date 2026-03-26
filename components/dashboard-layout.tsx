@@ -55,11 +55,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case "administrateur":
-        return "bg-[#149655]/20 text-[#149655] border-[#149655]/30"
+        return "bg-primary/15 text-foreground border-primary/30"
       case "agriculteur":
-        return "bg-chart-3/20 text-chart-3 border-chart-3/30"
+        return "bg-chart-3/18 text-foreground border-chart-3/40"
       case "commanditaire":
-        return "bg-chart-2/20 text-chart-2 border-chart-2/30"
+        return "bg-chart-2/18 text-foreground border-chart-2/40"
       default:
         return ""
     }
@@ -118,8 +118,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         }}
         className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors w-full text-left ${
           isActive
-            ? "bg-[#149655]/10 text-[#149655]"
-            : "text-muted-foreground hover:text-[#149655] hover:bg-[#149655]/5"
+            ? "bg-primary/12 text-foreground border border-primary/25"
+            : "text-foreground hover:text-foreground hover:bg-accent"
         }`}
       >
         <Icon className="w-4 h-4" />
@@ -136,8 +136,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           onClick={() => router.push("/dashboard")}
           className="flex items-center gap-3"
         >
-          <div className="p-2 bg-[#149655]/10 rounded-lg">
-            <TreePine className="w-5 h-5 text-[#149655]" />
+          <div className="p-2 bg-primary/10 rounded-lg border border-primary/15">
+            <TreePine className="w-5 h-5 text-primary" />
           </div>
           <span className="font-bold text-sidebar-foreground">DSM</span>
         </button>
@@ -216,10 +216,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   )
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen app-gradient-shell flex">
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden md:flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 ${
+        className={`hidden md:flex flex-col bg-sidebar/92 backdrop-blur-md border-r border-sidebar-border transition-all duration-300 ${
           sidebarOpen ? "w-64" : "w-0"
         }`}
       >
@@ -229,14 +229,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Mobile Sidebar Overlay */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-background/70 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* Mobile Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border transform transition-transform duration-300 md:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar/96 backdrop-blur-md border-r border-sidebar-border transform transition-transform duration-300 md:hidden ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -246,7 +246,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="h-14 border-b border-border bg-card flex items-center justify-between px-4 sticky top-0 z-30">
+        <header className="h-14 border-b border-border bg-card/95 backdrop-blur flex items-center justify-between px-4 sticky top-0 z-30">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"

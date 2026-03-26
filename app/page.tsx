@@ -29,7 +29,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-screen app-gradient-shell flex items-center justify-center p-4">
       {/* Background pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 opacity-10">
@@ -43,15 +43,15 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <Card className="w-full max-w-md relative z-10 border-border bg-card/95 backdrop-blur">
+      <Card className="w-full max-w-md relative z-10 border-border bg-card/95 backdrop-blur shadow-lg shadow-primary/5">
         <CardHeader className="text-center pb-2">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-primary/10 rounded-xl">
+            <div className="p-3 bg-primary/10 rounded-xl border border-primary/15">
               <TreePine className="w-8 h-8 text-primary" />
             </div>
           </div>
           <h1 className="text-2xl font-bold text-foreground">DSM</h1>
-          <p className="text-muted-foreground text-sm mt-1">
+          <p className="text-foreground/80 text-sm mt-1">
             Plateforme de suivi-évaluation des projets de reboisement
           </p>
         </CardHeader>
@@ -69,7 +69,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-secondary border-border"
+                className="bg-secondary border-border text-foreground placeholder:text-foreground/45"
               />
             </div>
 
@@ -85,12 +85,12 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="bg-secondary border-border pr-10"
+                  className="bg-secondary border-border text-foreground placeholder:text-foreground/45 pr-10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/65 hover:text-foreground transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -98,14 +98,14 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
+              <div className="text-sm text-foreground bg-destructive/14 border border-destructive/30 p-3 rounded-md">
                 {error}
               </div>
             )}
 
             <Button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
+              className="w-full bg-primary hover:bg-[var(--forest-green-hover)] text-primary-foreground font-medium"
               disabled={isLoading}
             >
               {isLoading ? "Connexion en cours..." : "Se connecter"}
@@ -113,10 +113,10 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 pt-6 border-t border-border">
-            <p className="text-xs text-muted-foreground text-center">
+            <p className="text-xs text-foreground/70 text-center">
               Comptes de démonstration :
             </p>
-            <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+            <div className="mt-2 space-y-1 text-xs text-foreground/75">
               <p><span className="text-foreground font-medium">Admin :</span> admin@reforest.com / admin123</p>
               <p><span className="text-foreground font-medium">Agriculteur :</span> agriculteur@reforest.com / agri123</p>
               <p><span className="text-foreground font-medium">Commanditaire :</span> commanditaire@reforest.com / cmd123</p>

@@ -4,41 +4,48 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.13 0.01 240);
-  --foreground: oklch(0.97 0 0);
-  --card: oklch(0.17 0.01 240);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.17 0.01 240);
-  --popover-foreground: oklch(0.97 0 0);
-  --primary: oklch(0.72 0.19 145);
-  --primary-foreground: oklch(0.13 0.01 240);
-  --secondary: oklch(0.22 0.01 240);
-  --secondary-foreground: oklch(0.97 0 0);
-  --muted: oklch(0.22 0.01 240);
-  --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.72 0.19 145);
-  --accent-foreground: oklch(0.13 0.01 240);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.97 0 0);
-  --border: oklch(0.28 0.01 240);
-  --input: oklch(0.22 0.01 240);
-  --ring: oklch(0.72 0.19 145);
-  --chart-1: oklch(0.72 0.19 145);
-  --chart-2: oklch(0.65 0.15 200);
-  --chart-3: oklch(0.75 0.18 85);
-  --chart-4: oklch(0.55 0.22 25);
-  --chart-5: oklch(0.60 0.16 280);
+  --forest-green: #149655;
+  --forest-green-hover: #0d6e3f;
+  --forest-green-soft: #e8f5ee;
+  --forest-green-mist: #f4fbf7;
+  --forest-green-border: #b7dcc7;
+  --forest-ink: #000000;
+  --forest-danger: #c96b4b;
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #149655;
+  --primary-foreground: #000000;
+  --secondary: #f4fbf7;
+  --secondary-foreground: #000000;
+  --muted: #f7faf8;
+  --muted-foreground: #000000;
+  --accent: #e8f5ee;
+  --accent-foreground: #000000;
+  --destructive: #c96b4b;
+  --destructive-foreground: #000000;
+  --border: #d9e9df;
+  --input: #d9e9df;
+  --ring: #149655;
+  --chart-1: #149655;
+  --chart-2: #69b88b;
+  --chart-3: #9ccb7d;
+  --chart-4: #d7b66f;
+  --chart-5: #7db1a2;
   --radius: 0.5rem;
-  --sidebar: oklch(0.10 0.01 240);
-  --sidebar-foreground: oklch(0.97 0 0);
-  --sidebar-primary: oklch(0.72 0.19 145);
-  --sidebar-primary-foreground: oklch(0.13 0.01 240);
-  --sidebar-accent: oklch(0.22 0.01 240);
-  --sidebar-accent-foreground: oklch(0.97 0 0);
-  --sidebar-border: oklch(0.28 0.01 240);
-  --sidebar-ring: oklch(0.72 0.19 145);
-  --success: oklch(0.72 0.19 145);
-  --warning: oklch(0.75 0.18 85);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #149655;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #f4fbf7;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #d9e9df;
+  --sidebar-ring: #149655;
+  --success: #149655;
+  --warning: #d7b66f;
 }
 
 @theme inline {
@@ -85,10 +92,82 @@
 }
 
 @layer base {
+  html {
+    background:
+      linear-gradient(180deg, #f7fff9 0%, #eef9f2 34%, #ffffff 72%, #f4fbf7 100%);
+    color-scheme: light;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+    background:
+      radial-gradient(circle at top left, rgba(20, 150, 85, 0.18) 0%, rgba(20, 150, 85, 0.08) 18%, transparent 40%),
+      radial-gradient(circle at top right, rgba(20, 150, 85, 0.12) 0%, transparent 30%),
+      linear-gradient(180deg, #f7fff9 0%, #eef9f2 34%, #ffffff 72%, #f4fbf7 100%);
+    background-image:
+      radial-gradient(circle at top left, rgba(20, 150, 85, 0.18) 0%, rgba(20, 150, 85, 0.08) 18%, transparent 40%),
+      radial-gradient(circle at top right, rgba(20, 150, 85, 0.12) 0%, transparent 30%),
+      radial-gradient(circle at bottom left, rgba(20, 150, 85, 0.1) 0%, transparent 28%),
+      linear-gradient(180deg, #f7fff9 0%, #eef9f2 34%, #ffffff 72%, #f4fbf7 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  label,
+  small {
+    color: var(--foreground);
+  }
+}
+
+@layer utilities {
+  .app-gradient-shell {
+    background:
+      radial-gradient(circle at top left, rgba(20, 150, 85, 0.18) 0%, rgba(20, 150, 85, 0.08) 18%, transparent 40%),
+      radial-gradient(circle at top right, rgba(20, 150, 85, 0.12) 0%, transparent 30%),
+      radial-gradient(circle at bottom left, rgba(20, 150, 85, 0.1) 0%, transparent 28%),
+      linear-gradient(180deg, #f7fff9 0%, #eef9f2 34%, #ffffff 72%, #f4fbf7 100%);
+    background-attachment: fixed;
+  }
+
+  .forest-surface {
+    background-color: transparent;
+  }
+
+  .forest-section {
+    background-color: var(--forest-green-mist);
+    border: 1px solid var(--border);
+  }
+
+  .forest-highlight {
+    background-color: var(--forest-green-soft);
+    border: 1px solid var(--forest-green-border);
+  }
+
+  .forest-interactive {
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .forest-interactive:hover {
+    background-color: var(--accent);
+    border-color: var(--primary);
+  }
+
+  .forest-ring {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--forest-green) 18%, transparent);
   }
 }

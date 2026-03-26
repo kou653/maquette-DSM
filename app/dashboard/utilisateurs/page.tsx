@@ -64,7 +64,7 @@ export default function UtilisateursPage() {
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case "administrateur":
-        return "bg-primary/20 text-primary border-primary/30"
+        return "bg-primary/20 text-foreground border-primary/30"
       case "agriculteur":
         return "bg-chart-3/20 text-chart-3 border-chart-3/30"
       case "commanditaire":
@@ -123,7 +123,7 @@ export default function UtilisateursPage() {
             </div>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-primary hover:bg-primary/90">
+                <Button className="bg-primary hover:bg-[var(--forest-green-hover)]">
                   <Plus className="w-4 h-4 mr-2" />
                   Créer
                 </Button>
@@ -182,7 +182,7 @@ export default function UtilisateursPage() {
                     <Button variant="outline" onClick={() => setDialogOpen(false)}>
                       Annuler
                     </Button>
-                    <Button className="bg-primary hover:bg-primary/90">Créer l'utilisateur</Button>
+                    <Button className="bg-primary hover:bg-[var(--forest-green-hover)]">Créer l'utilisateur</Button>
                   </div>
                 </div>
               </DialogContent>
@@ -191,7 +191,7 @@ export default function UtilisateursPage() {
         </div>
 
         {/* Admin Badge */}
-        <Badge className="bg-primary/20 text-primary border-primary/30">
+        <Badge className="bg-primary/20 text-foreground border-primary/30">
           Accès Administrateur uniquement
         </Badge>
 
@@ -276,7 +276,7 @@ export default function UtilisateursPage() {
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="text-xs font-medium text-primary">
+                            <span className="text-xs font-medium text-foreground">
                               {u.nom.split(" ").map((n) => n[0]).join("")}
                             </span>
                           </div>

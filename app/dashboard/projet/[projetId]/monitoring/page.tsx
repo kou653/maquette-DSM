@@ -121,7 +121,7 @@ export default function MonitoringPage({ params }: Props) {
         </div>
 
         {/* Admin Badge */}
-        <Badge className="bg-primary/20 text-primary border-primary/30">
+        <Badge className="bg-primary/20 text-foreground border-primary/30">
           Accès Administrateur uniquement
         </Badge>
 
@@ -279,7 +279,7 @@ export default function MonitoringPage({ params }: Props) {
                 </CardTitle>
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" className="bg-primary hover:bg-primary/90">
+                    <Button size="sm" className="bg-primary hover:bg-[var(--forest-green-hover)]">
                       <Plus className="w-4 h-4 mr-1" />
                       Ajouter une note
                     </Button>
@@ -299,7 +299,7 @@ export default function MonitoringPage({ params }: Props) {
                         <Button variant="outline" onClick={() => setDialogOpen(false)}>
                           Annuler
                         </Button>
-                        <Button onClick={handleAddNote} className="bg-primary hover:bg-primary/90">
+                        <Button onClick={handleAddNote} className="bg-primary hover:bg-[var(--forest-green-hover)]">
                           Enregistrer
                         </Button>
                       </div>
