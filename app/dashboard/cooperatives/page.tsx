@@ -47,22 +47,24 @@ export default function CooperativesPage() {
   const filteredCooperatives = cooperatives.filter(
     (c) =>
       c.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.entreprise.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.ville.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.village.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.contact.includes(searchTerm)
   )
 
   return (
     <DashboardLayout>
       <div className="p-6 space-y-6">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
               <Building2 className="w-6 h-6 text-chart-2" />
-              Gestion des Coopératives
+              Gestion des Cooperatives
             </h1>
             <p className="text-muted-foreground">
-              Liste de toutes les coopératives partenaires
+              Liste de toutes les cooperatives partenaires
             </p>
           </div>
           <div className="flex gap-3">
@@ -84,12 +86,16 @@ export default function CooperativesPage() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Ajouter une coopérative</DialogTitle>
+                  <DialogTitle>Ajouter une cooperative</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4 pt-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Nom</label>
-                    <Input placeholder="Nom de la coopérative" className="bg-secondary border-border" />
+                    <Input placeholder="Nom de la cooperative" className="bg-secondary border-border" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Entreprise</label>
+                    <Input placeholder="Entreprise partenaire" className="bg-secondary border-border" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Contact</label>
@@ -99,9 +105,15 @@ export default function CooperativesPage() {
                     <label className="text-sm font-medium text-foreground">Email</label>
                     <Input type="email" placeholder="email@coop.com" className="bg-secondary border-border" />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Région</label>
-                    <Input placeholder="Région" className="bg-secondary border-border" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Ville</label>
+                      <Input placeholder="Ville" className="bg-secondary border-border" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Village</label>
+                      <Input placeholder="Village" className="bg-secondary border-border" />
+                    </div>
                   </div>
                   <div className="flex justify-end gap-2 pt-4">
                     <Button variant="outline" onClick={() => setDialogOpen(false)}>
@@ -115,31 +127,36 @@ export default function CooperativesPage() {
           </div>
         </div>
 
-        {/* Admin Badge */}
         <Badge className="bg-primary/20 text-foreground border-primary/30">
-          Accès Administrateur uniquement
+          Acces Administrateur uniquement
         </Badge>
 
-        {/* Stats */}
-        <Card className="bg-card border-border">
+        <Card
+          className="bg-card border-border cursor-pointer transition-colors hover:border-primary/40 hover:bg-accent/40"
+          onClick={() =>
+            document.getElementById("cooperatives-list")?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            })
+          }
+        >
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-chart-2/10 rounded-lg">
                 <Building2 className="w-5 h-5 text-chart-2" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total coopératives</p>
+                <p className="text-sm text-muted-foreground">Total cooperatives</p>
                 <p className="text-2xl font-bold text-foreground">{cooperatives.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Table */}
-        <Card className="bg-card border-border">
+        <Card id="cooperatives-list" className="bg-card border-border">
           <CardHeader>
             <CardTitle className="text-base text-foreground">
-              Liste des coopératives ({filteredCooperatives.length})
+              Liste des cooperatives ({filteredCooperatives.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -148,9 +165,11 @@ export default function CooperativesPage() {
                 <TableHeader>
                   <TableRow className="border-border">
                     <TableHead className="text-muted-foreground">Nom</TableHead>
+                    <TableHead className="text-muted-foreground">Entreprise</TableHead>
                     <TableHead className="text-muted-foreground">Contact</TableHead>
                     <TableHead className="text-muted-foreground">Email</TableHead>
-                    <TableHead className="text-muted-foreground">Région</TableHead>
+                    <TableHead className="text-muted-foreground">Ville</TableHead>
+                    <TableHead className="text-muted-foreground">Village</TableHead>
                     <TableHead className="text-muted-foreground text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -163,6 +182,7 @@ export default function CooperativesPage() {
                           <span className="font-medium text-foreground">{coop.nom}</span>
                         </div>
                       </TableCell>
+                      <TableCell className="text-foreground">{coop.entreprise}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2 text-foreground">
                           <Phone className="w-4 h-4 text-muted-foreground" />
@@ -178,9 +198,10 @@ export default function CooperativesPage() {
                       <TableCell>
                         <div className="flex items-center gap-2 text-foreground">
                           <MapPin className="w-4 h-4 text-muted-foreground" />
-                          {coop.region}
+                          {coop.ville}
                         </div>
                       </TableCell>
+                      <TableCell className="text-foreground">{coop.village}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -195,8 +216,8 @@ export default function CooperativesPage() {
                   ))}
                   {filteredCooperatives.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                        Aucune coopérative trouvée
+                      <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                        Aucune cooperative trouvee
                       </TableCell>
                     </TableRow>
                   )}

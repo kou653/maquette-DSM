@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Users, Search, Mail, Shield, FolderKanban, Plus, Pencil, Trash2 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -37,6 +37,7 @@ import { DashboardLayout } from "@/components/dashboard-layout"
 export default function UtilisateursPage() {
   const { user } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [searchTerm, setSearchTerm] = useState("")
   const [dialogOpen, setDialogOpen] = useState(false)
   const [newUserRole, setNewUserRole] = useState<string>("")
@@ -54,12 +55,21 @@ export default function UtilisateursPage() {
 
   if (!user || user.role !== "administrateur") return null
 
-  const filteredUsers = users.filter(
-    (u) =>
+  const roleFilter = searchParams.get("role")
+
+  const filteredUsers = users.filter((u) => {
+    const matchesSearch =
       u.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.role.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+
+    const matchesRole =
+      !roleFilter ||
+      roleFilter === "all" ||
+      u.role === roleFilter
+
+    return matchesSearch && matchesRole
+  })
 
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
@@ -197,7 +207,10 @@ export default function UtilisateursPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-chart-2/40 hover:bg-accent/40"
+            onClick={() => router.push("/dashboard/utilisateurs?role=all#users-list")}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-chart-2/10 rounded-lg">
@@ -210,7 +223,10 @@ export default function UtilisateursPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-primary/40 hover:bg-accent/40"
+            onClick={() => router.push("/dashboard/utilisateurs?role=administrateur#users-list")}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
@@ -223,7 +239,10 @@ export default function UtilisateursPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-chart-3/40 hover:bg-accent/40"
+            onClick={() => router.push("/dashboard/utilisateurs?role=agriculteur#users-list")}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-chart-3/10 rounded-lg">
@@ -236,7 +255,10 @@ export default function UtilisateursPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-chart-2/40 hover:bg-accent/40"
+            onClick={() => router.push("/dashboard/utilisateurs?role=commanditaire#users-list")}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-chart-2/10 rounded-lg">
@@ -252,7 +274,7 @@ export default function UtilisateursPage() {
         </div>
 
         {/* Table */}
-        <Card className="bg-card border-border">
+        <Card id="users-list" className="bg-card border-border">
           <CardHeader>
             <CardTitle className="text-base text-foreground">
               Liste des utilisateurs ({filteredUsers.length})

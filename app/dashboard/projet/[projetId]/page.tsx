@@ -10,10 +10,6 @@ import { useAuth } from "@/lib/auth-context"
 import { projets, getParcellesByProjet, getPlantsByProjet, cooperatives } from "@/lib/mock-data"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
   Tooltip,
   ResponsiveContainer,
   PieChart,
@@ -59,11 +55,6 @@ export default function ProjetDashboard({ params }: Props) {
     { name: "Vivants", value: plantsVivants, color: "var(--primary)" },
     { name: "Morts", value: plantsMorts, color: "var(--destructive)" },
   ]
-
-  const parcelleData = parcelles.slice(0, 5).map((p) => ({
-    name: p.nom.length > 15 ? p.nom.substring(0, 15) + "..." : p.nom,
-    superficie: p.superficie,
-  }))
 
   const calculateProgress = () => {
     const start = new Date(projet.dateDebut).getTime()
@@ -121,7 +112,10 @@ export default function ProjetDashboard({ params }: Props) {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-chart-2/50 hover:bg-accent/40"
+            onClick={() => router.push(`/dashboard/projet/${projetId}/parcelles`)}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-chart-2/10 rounded-lg">
@@ -134,7 +128,10 @@ export default function ProjetDashboard({ params }: Props) {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-primary/50 hover:bg-accent/40"
+            onClick={() => router.push(`/dashboard/projet/${projetId}/plants?status=vivant`)}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
@@ -147,7 +144,16 @@ export default function ProjetDashboard({ params }: Props) {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-chart-3/50 hover:bg-accent/40"
+            onClick={() =>
+              router.push(
+                user.role === "administrateur"
+                  ? `/dashboard/projet/${projetId}/monitoring`
+                  : `/dashboard/projet/${projetId}/plants`
+              )
+            }
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-chart-3/10 rounded-lg">
@@ -160,7 +166,10 @@ export default function ProjetDashboard({ params }: Props) {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-chart-2/50 hover:bg-accent/40"
+            onClick={() => router.push("/dashboard/cooperatives")}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-chart-2/10 rounded-lg">
@@ -228,7 +237,7 @@ export default function ProjetDashboard({ params }: Props) {
             </CardContent>
           </Card>
 
-          {/* Parcelle Sizes Chart */}
+          {/* Parcelle Sizes List */}
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-base text-foreground flex items-center gap-2">
@@ -236,30 +245,19 @@ export default function ProjetDashboard({ params }: Props) {
                 Superficie des parcelles (ha)
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={parcelleData}>
-                  <XAxis
-                    dataKey="name"
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                    axisLine={{ stroke: "var(--border)" }}
-                    tickLine={{ stroke: "var(--border)" }}
-                  />
-                  <YAxis
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                    axisLine={{ stroke: "var(--border)" }}
-                    tickLine={{ stroke: "var(--border)" }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--card)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "8px",
-                    }}
-                  />
-                  <Bar dataKey="superficie" fill="var(--chart-2)" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+            <CardContent className="space-y-3">
+              {parcelles.map((parcelle) => (
+                <button
+                  key={parcelle.id}
+                  onClick={() => router.push(`/dashboard/projet/${projetId}/parcelles`)}
+                  className="w-full rounded-lg border border-border bg-secondary px-4 py-3 text-left transition-colors hover:border-chart-2/40 hover:bg-accent"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="font-medium text-foreground">{parcelle.nom}</span>
+                    <span className="text-sm font-semibold text-foreground">{parcelle.superficie.toFixed(1)} ha</span>
+                  </div>
+                </button>
+              ))}
             </CardContent>
           </Card>
         </div>
@@ -280,7 +278,8 @@ export default function ProjetDashboard({ params }: Props) {
                   className="p-4 bg-secondary rounded-lg border border-border"
                 >
                   <p className="font-medium text-foreground">{coop.nom}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{coop.region}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{coop.entreprise}</p>
+                  <p className="text-sm text-muted-foreground">{coop.ville} - {coop.village}</p>
                   <p className="text-sm text-muted-foreground">{coop.contact}</p>
                 </div>
               ))}

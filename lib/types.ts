@@ -52,9 +52,11 @@ export interface Espece {
 export interface Cooperative {
   id: string
   nom: string
+  entreprise: string
   contact: string
-  region: string
   email: string
+  ville: string
+  village: string
 }
 
 export interface MonitoringData {
@@ -64,6 +66,12 @@ export interface MonitoringData {
   plantsVivants: number
   plantsMorts: number
   tauxSurvie: number
+  history: {
+    month: string
+    plantsMisEnTerre: number
+    plantsVivants: number
+    plantsMorts: number
+  }[]
   documentation?: {
     notes: string
     photos: string[]

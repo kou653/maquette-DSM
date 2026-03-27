@@ -71,12 +71,12 @@ export const plants: Plant[] = [
 ]
 
 export const cooperatives: Cooperative[] = [
-  { id: "c1", nom: "Coop Sahel Vert", contact: "+226 70 12 34 56", region: "Centre", email: "sahel.vert@coop.bf" },
-  { id: "c2", nom: "Coop Est Solidaire", contact: "+226 70 23 45 67", region: "Est", email: "est.solidaire@coop.bf" },
-  { id: "c3", nom: "Coop Borgou", contact: "+229 97 12 34 56", region: "Borgou", email: "borgou@coop.bj" },
-  { id: "c4", nom: "Coop Atacora", contact: "+229 97 23 45 67", region: "Atacora", email: "atacora@coop.bj" },
-  { id: "c5", nom: "Coop Lagunes", contact: "+225 07 12 34 56", region: "Lagunes", email: "lagunes@coop.ci" },
-  { id: "c6", nom: "Coop Vallée Bandama", contact: "+225 07 23 45 67", region: "Vallée du Bandama", email: "bandama@coop.ci" },
+  { id: "c1", nom: "Coop Sahel Vert", entreprise: "Agro Sahel Services", contact: "+226 70 12 34 56", email: "sahel.vert@coop.bf", ville: "Ouagadougou", village: "Koubri" },
+  { id: "c2", nom: "Coop Est Solidaire", entreprise: "Terres de l'Est", contact: "+226 70 23 45 67", email: "est.solidaire@coop.bf", ville: "Fada N'Gourma", village: "Diapangou" },
+  { id: "c3", nom: "Coop Borgou", entreprise: "Borgou Agro Conseil", contact: "+229 97 12 34 56", email: "borgou@coop.bj", ville: "Parakou", village: "Nima" },
+  { id: "c4", nom: "Coop Atacora", entreprise: "Atacora Nature", contact: "+229 97 23 45 67", email: "atacora@coop.bj", ville: "Natitingou", village: "Kotopounga" },
+  { id: "c5", nom: "Coop Lagunes", entreprise: "Lagunes Reforest", contact: "+225 07 12 34 56", email: "lagunes@coop.ci", ville: "Abidjan", village: "Anyama" },
+  { id: "c6", nom: "Coop Vallée Bandama", entreprise: "Bandama Agroforest", contact: "+225 07 23 45 67", email: "bandama@coop.ci", ville: "Bouaké", village: "Béoumi" },
 ]
 
 export const users: User[] = [
@@ -95,6 +95,11 @@ export const monitoringData: MonitoringData[] = [
     plantsVivants: 450,
     plantsMorts: 50,
     tauxSurvie: 90,
+    history: [
+      { month: "2024-02", plantsMisEnTerre: 500, plantsVivants: 482, plantsMorts: 18 },
+      { month: "2024-03", plantsMisEnTerre: 500, plantsVivants: 468, plantsMorts: 32 },
+      { month: "2024-04", plantsMisEnTerre: 500, plantsVivants: 450, plantsMorts: 50 },
+    ],
     documentation: [
       { notes: "Croissance normale, arrosage régulier effectué", photos: [], date: "2024-03-15" },
       { notes: "Quelques plants affectés par la sécheresse", photos: [], date: "2024-04-20" },
@@ -107,6 +112,11 @@ export const monitoringData: MonitoringData[] = [
     plantsVivants: 185,
     plantsMorts: 15,
     tauxSurvie: 92.5,
+    history: [
+      { month: "2024-02", plantsMisEnTerre: 200, plantsVivants: 194, plantsMorts: 6 },
+      { month: "2024-03", plantsMisEnTerre: 200, plantsVivants: 190, plantsMorts: 10 },
+      { month: "2024-04", plantsMisEnTerre: 200, plantsVivants: 185, plantsMorts: 15 },
+    ],
     documentation: [
       { notes: "Excellente adaptation au sol", photos: [], date: "2024-03-20" },
     ],
@@ -118,6 +128,11 @@ export const monitoringData: MonitoringData[] = [
     plantsVivants: 280,
     plantsMorts: 70,
     tauxSurvie: 80,
+    history: [
+      { month: "2024-02", plantsMisEnTerre: 350, plantsVivants: 330, plantsMorts: 20 },
+      { month: "2024-03", plantsMisEnTerre: 350, plantsVivants: 305, plantsMorts: 45 },
+      { month: "2024-04", plantsMisEnTerre: 350, plantsVivants: 280, plantsMorts: 70 },
+    ],
     documentation: [
       { notes: "Mortalité due aux attaques de termites", photos: [], date: "2024-04-10" },
     ],
@@ -129,6 +144,11 @@ export const monitoringData: MonitoringData[] = [
     plantsVivants: 570,
     plantsMorts: 30,
     tauxSurvie: 95,
+    history: [
+      { month: "2024-04", plantsMisEnTerre: 600, plantsVivants: 590, plantsMorts: 10 },
+      { month: "2024-05", plantsMisEnTerre: 600, plantsVivants: 580, plantsMorts: 20 },
+      { month: "2024-06", plantsMisEnTerre: 600, plantsVivants: 570, plantsMorts: 30 },
+    ],
     documentation: [],
   },
   {
@@ -138,11 +158,39 @@ export const monitoringData: MonitoringData[] = [
     plantsVivants: 620,
     plantsMorts: 180,
     tauxSurvie: 77.5,
+    history: [
+      { month: "2024-05", plantsMisEnTerre: 800, plantsVivants: 740, plantsMorts: 60 },
+      { month: "2024-06", plantsMisEnTerre: 800, plantsVivants: 690, plantsMorts: 110 },
+      { month: "2024-07", plantsMisEnTerre: 800, plantsVivants: 620, plantsMorts: 180 },
+    ],
     documentation: [
       { notes: "Stress hydrique important en saison sèche", photos: [], date: "2024-06-01" },
     ],
   },
 ]
+
+function sortMonitoringHistory(history: MonitoringData["history"]) {
+  return [...history].sort((a, b) => a.month.localeCompare(b.month))
+}
+
+function getLatestMetrics(entry: MonitoringData) {
+  const history = sortMonitoringHistory(entry.history)
+  const latest = history[history.length - 1]
+
+  if (!latest) {
+    return {
+      plantsMisEnTerre: entry.plantsMisEnTerre,
+      plantsVivants: entry.plantsVivants,
+      plantsMorts: entry.plantsMorts,
+    }
+  }
+
+  return {
+    plantsMisEnTerre: latest.plantsMisEnTerre,
+    plantsVivants: latest.plantsVivants,
+    plantsMorts: latest.plantsMorts,
+  }
+}
 
 export function getParcellesByProjet(projetId: string): Parcelle[] {
   return parcelles.filter((p) => p.projetId === projetId)
@@ -154,20 +202,57 @@ export function getPlantsByProjet(projetId: string): Plant[] {
 }
 
 export function getMonitoringByParcelleAndEspece(parcelleId: string, especeId: string): MonitoringData | undefined {
-  return monitoringData.find((m) => m.parcelleId === parcelleId && m.especeId === especeId)
+  const entry = monitoringData.find((m) => m.parcelleId === parcelleId && m.especeId === especeId)
+  if (!entry) return undefined
+
+  const latest = getLatestMetrics(entry)
+  const tauxSurvie =
+    latest.plantsMisEnTerre > 0
+      ? Math.round((latest.plantsVivants / latest.plantsMisEnTerre) * 1000) / 10
+      : 0
+
+  return {
+    ...entry,
+    ...latest,
+    tauxSurvie,
+    history: sortMonitoringHistory(entry.history),
+  }
 }
 
 export function getMonitoringByParcelle(parcelleId: string): MonitoringData | null {
   const parcelleMonitoring = monitoringData.filter((m) => m.parcelleId === parcelleId)
   if (parcelleMonitoring.length === 0) return null
-  
+
+  const historyByMonth = new Map<string, { plantsMisEnTerre: number; plantsVivants: number; plantsMorts: number }>()
+
+  for (const entry of parcelleMonitoring) {
+    for (const snapshot of entry.history) {
+      const current = historyByMonth.get(snapshot.month) ?? {
+        plantsMisEnTerre: 0,
+        plantsVivants: 0,
+        plantsMorts: 0,
+      }
+
+      current.plantsMisEnTerre += snapshot.plantsMisEnTerre
+      current.plantsVivants += snapshot.plantsVivants
+      current.plantsMorts += snapshot.plantsMorts
+      historyByMonth.set(snapshot.month, current)
+    }
+  }
+
+  const history = [...historyByMonth.entries()]
+    .map(([month, values]) => ({ month, ...values }))
+    .sort((a, b) => a.month.localeCompare(b.month))
+
+  const latest = history[history.length - 1]
   const aggregated: MonitoringData = {
     especeId: "all",
     parcelleId: parcelleId,
-    plantsMisEnTerre: parcelleMonitoring.reduce((sum, m) => sum + m.plantsMisEnTerre, 0),
-    plantsVivants: parcelleMonitoring.reduce((sum, m) => sum + m.plantsVivants, 0),
-    plantsMorts: parcelleMonitoring.reduce((sum, m) => sum + m.plantsMorts, 0),
+    plantsMisEnTerre: latest?.plantsMisEnTerre ?? 0,
+    plantsVivants: latest?.plantsVivants ?? 0,
+    plantsMorts: latest?.plantsMorts ?? 0,
     tauxSurvie: 0,
+    history,
     documentation: parcelleMonitoring.flatMap((m) => m.documentation || []).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
   }
   aggregated.tauxSurvie = aggregated.plantsMisEnTerre > 0 

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, use, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Sprout, Search, MapPin, Leaf, CalendarDays, CheckCircle2, XCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -33,6 +33,7 @@ export default function PlantsPage({ params }: Props) {
   const { projetId } = use(params)
   const { user } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<"all" | "vivant" | "mort">("all")
   const [especeFilter, setEspeceFilter] = useState<string>("all")
@@ -50,6 +51,15 @@ export default function PlantsPage({ params }: Props) {
       router.push("/dashboard")
     }
   }, [user, projetId, router])
+
+  useEffect(() => {
+    const requestedStatus = searchParams.get("status")
+    if (requestedStatus === "vivant" || requestedStatus === "mort") {
+      setStatusFilter(requestedStatus)
+      return
+    }
+    setStatusFilter("all")
+  }, [searchParams])
 
   if (!user || !projet) return null
 
@@ -87,7 +97,10 @@ export default function PlantsPage({ params }: Props) {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-primary/40 hover:bg-accent/40"
+            onClick={() => setStatusFilter("all")}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
@@ -100,7 +113,10 @@ export default function PlantsPage({ params }: Props) {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-primary/40 hover:bg-accent/40"
+            onClick={() => setStatusFilter("vivant")}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
@@ -113,7 +129,10 @@ export default function PlantsPage({ params }: Props) {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card border-border">
+          <Card
+            className="bg-card border-border cursor-pointer transition-colors hover:border-destructive/40 hover:bg-destructive/5"
+            onClick={() => setStatusFilter("mort")}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-destructive/10 rounded-lg">

@@ -135,5 +135,7 @@ export default function EspecesPage({ params }: Props) {
         </Card>
       </div>
     </DashboardLayout>
+    
   )
+  
 }
