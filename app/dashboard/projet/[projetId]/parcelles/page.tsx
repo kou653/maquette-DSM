@@ -153,8 +153,8 @@ export default function ParcellesPage({ params }: Props) {
           </Card>
         </div>
 
-        {/* Parcels Grid (Restored) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {/* Parcels Grid (3 columns, stretching to full width) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full">
           {filteredPlants.reduce((acc: any[], plant) => {
             const parcel = parcelles.find(p => p.id === plant.parcelleId)
             if (parcel && !acc.find(p => p.id === parcel.id)) {

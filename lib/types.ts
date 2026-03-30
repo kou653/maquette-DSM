@@ -102,3 +102,13 @@ export interface Objectif {
   estValide: boolean
   dateCreation: string
 }
+
+export interface EvolutionImage {
+  id: string
+  projetId: string
+  parcelleId: string
+  url: string
+  description: string
+  date: string
+  auteur: string
+}

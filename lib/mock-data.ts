@@ -1,4 +1,4 @@
-import type { Projet, Parcelle, Plant, Espece, Cooperative, User, MonitoringData, EspeceDocumentation, Objectif } from "./types"
+import type { Projet, Parcelle, Plant, Espece, Cooperative, User, MonitoringData, EspeceDocumentation, Objectif, EvolutionImage } from "./types"
 
 export const projets: Projet[] = [
   {
@@ -12,7 +12,7 @@ export const projets: Projet[] = [
     totalParcelles: 45,
     totalPlants: 12500,
     tauxSurvie: 87.5,
-    objectif: "50 plants",
+    objectif: "6500 plants",
   },
   {
     id: "2",
@@ -41,9 +41,9 @@ export const projets: Projet[] = [
 ]
 
 export const parcelles: Parcelle[] = [
-  { id: "p1", nom: "Parcelle Nord A1", ville: "Ouagadougou", cooperative: "Coop Sahel Vert", projetId: "1", superficie: 5.2, coordonnees: { lat: 12.3714, lng: -1.5197 }, objectif: "Planter 2000 Acacias" },
-  { id: "p2", nom: "Parcelle Nord A2", ville: "Ouagadougou", cooperative: "Coop Sahel Vert", projetId: "1", superficie: 4.8, coordonnees: { lat: 12.3814, lng: -1.5097 }, objectif: "Planter 1500 Baobabs" },
-  { id: "p3", nom: "Parcelle Est B1", ville: "Fada N'Gourma", cooperative: "Coop Est Solidaire", projetId: "1", superficie: 6.1, coordonnees: { lat: 12.0614, lng: 0.3497 }, objectif: "Planter 3000 Karités" },
+  { id: "p1", nom: "Parcelle Nord A1", ville: "Ouagadougou", cooperative: "Coop Sahel Vert", projetId: "1", superficie: 5.2, coordonnees: { lat: 12.3714, lng: -1.5197 }, objectif: "2000 plants" },
+  { id: "p2", nom: "Parcelle Nord A2", ville: "Ouagadougou", cooperative: "Coop Sahel Vert", projetId: "1", superficie: 4.8, coordonnees: { lat: 12.3814, lng: -1.5097 }, objectif: "1500 plants" },
+  { id: "p3", nom: "Parcelle Est B1", ville: "Fada N'Gourma", cooperative: "Coop Est Solidaire", projetId: "1", superficie: 6.1, coordonnees: { lat: 12.0614, lng: 0.3497 }, objectif: "3000 plants" },
   { id: "p4", nom: "Parcelle Parakou 1", ville: "Parakou", cooperative: "Coop Borgou", projetId: "2", superficie: 3.5, coordonnees: { lat: 9.3400, lng: 2.6300 } },
   { id: "p5", nom: "Parcelle Natitingou 1", ville: "Natitingou", cooperative: "Coop Atacora", projetId: "2", superficie: 4.2, coordonnees: { lat: 10.3000, lng: 1.3800 } },
   { id: "p6", nom: "Parcelle Abidjan Nord", ville: "Abidjan", cooperative: "Coop Lagunes", projetId: "3", superficie: 7.8, coordonnees: { lat: 5.3600, lng: -4.0083 } },
@@ -114,7 +114,7 @@ export const objectifs: Objectif[] = [
     id: "obj1",
     projetId: "1",
     parcelleId: "p1",
-    titre: "",
+    titre: "2000 plants",
     valeurCible: 2000,
     valeurActuelle: 1800,
     unite: "plants",
@@ -125,7 +125,7 @@ export const objectifs: Objectif[] = [
     id: "obj2",
     projetId: "1",
     parcelleId: "p2",
-    titre: "",
+    titre: "1500 plants",
     valeurCible: 1500,
     valeurActuelle: 1500,
     unite: "plants",
@@ -136,7 +136,7 @@ export const objectifs: Objectif[] = [
     id: "obj3",
     projetId: "1",
     parcelleId: "p3",
-    titre: "",
+    titre: "3000 plants",
     valeurCible: 3000,
     valeurActuelle: 2100,
     unite: "plants",
@@ -324,6 +324,50 @@ export function getMonitoringByParcelle(parcelleId: string): MonitoringData | nu
   return aggregated
 }
 
+export const evolutionImages: EvolutionImage[] = [
+  {
+    id: "img1",
+    projetId: "1",
+    parcelleId: "p1",
+    url: "/Fichier 3.png", // Using existing logo as a placeholder
+    description: "Les plants sont en bonne état.",
+    date: "2024-02-22T08:00:00Z",
+    auteur: "Marie Koné"
+  },
+  {
+    id: "img2",
+    projetId: "1",
+    parcelleId: "p1",
+    url: "/Fichier 3.png",
+    description: "bon taux d'humidité du sol.",
+    date: "2024-03-15T10:30:00Z",
+    auteur: "Marie Koné"
+  },
+  {
+    id: "img3",
+    projetId: "1",
+    parcelleId: "p2",
+    url: "/Fichier 3.png",
+    description: "Inspection mensuelle. Début du développement des feuilles.",
+    date: "2024-03-20T09:00:00Z",
+    auteur: "Jean Dupont"
+  }
+]
+
+export function getEvolutionImagesByProjet(projetId: string): EvolutionImage[] {
+  return evolutionImages.filter((img) => img.projetId === projetId)
+}
+
+export function getEvolutionImagesByParcelle(parcelleId: string): EvolutionImage[] {
+  return evolutionImages.filter((img) => img.parcelleId === parcelleId)
+}
+
+export function addEvolutionImage(img: Omit<EvolutionImage, "id">): EvolutionImage {
+  const newImg = { ...img, id: `img${evolutionImages.length + 1}-${Date.now()}` }
+  evolutionImages.push(newImg)
+  return newImg
+}
+
 export function addPlant(plant: Omit<Plant, "id">): Plant {
   const newPlant = { ...plant, id: `pl${plants.length + 1}-${Date.now()}` }
   plants.push(newPlant)
@@ -369,4 +413,11 @@ export function deleteObjectif(id: string): void {
 
 export function getObjectifsByProjet(projetId: string): Objectif[] {
   return objectifs.filter(o => o.projetId === projetId)
+}
+
+export function updateObjectifValeurActuelle(id: string, valeur: number): void {
+  const obj = objectifs.find(o => o.id === id)
+  if (obj) {
+    obj.valeurActuelle = valeur
+  }
 }

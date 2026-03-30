@@ -1,12 +1,28 @@
 "use client"
 
-import { use } from "react"
+import { use, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ChevronLeft, Layers, MapPin, Building2, MapPinned, Leaf, CalendarDays, CheckCircle2, XCircle, ChevronDown } from "lucide-react"
+import { 
+  ChevronLeft, 
+  Layers, 
+  MapPin, 
+  Building2, 
+  MapPinned, 
+  Leaf, 
+  CalendarDays, 
+  CheckCircle2, 
+  XCircle, 
+  ChevronDown, 
+  Target, 
+  TrendingUp,
+  Pencil
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
+import { Label } from "@/components/ui/label"
 import {
   Table,
   TableBody,
@@ -21,9 +37,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { DashboardLayout } from "@/components/dashboard-layout"
-import { projets, parcelles, getPlantsByParcelle, especes } from "@/lib/mock-data"
-import { useState } from "react"
+import { 
+  projets, 
+  parcelles, 
+  getPlantsByParcelle, 
+  especes, 
+  objectifs as initialObjectifs, 
+  updateObjectifValeurActuelle 
+} from "@/lib/mock-data"
 
 interface Props {
   params: Promise<{ projetId: string, parcelleId: string }>
@@ -38,11 +69,37 @@ export default function ParcelleDetailPage({ params }: Props) {
     etat: "all"
   })
 
+  // Dynamic Objective State
+  const [parcelleObjectif, setParcelleObjectif] = useState<any>(null)
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false)
+  const [tempValue, setTempValue] = useState<string>("")
+
   const projet = projets.find((p) => p.id === projetId)
   const parcelle = parcelles.find((p) => p.id === parcelleId)
   const plants = getPlantsByParcelle(parcelleId)
 
+  useEffect(() => {
+    const obj = initialObjectifs.find(o => o.parcelleId === parcelleId)
+    if (obj) {
+      setParcelleObjectif(obj)
+      setTempValue(obj.valeurActuelle.toString())
+    }
+  }, [parcelleId])
+
   if (!projet || !parcelle) return null
+
+  const handleUpdateValue = () => {
+    const val = parseInt(tempValue)
+    if (!isNaN(val) && parcelleObjectif) {
+      updateObjectifValeurActuelle(parcelleObjectif.id, val)
+      setParcelleObjectif({ ...parcelleObjectif, valeurActuelle: val })
+      setIsUpdateDialogOpen(false)
+    }
+  }
+
+  const progress = parcelleObjectif 
+    ? Math.min(100, Math.round((parcelleObjectif.valeurActuelle / parcelleObjectif.valeurCible) * 100)) 
+    : 0
 
   const filteredPlants = plants.filter((plant: any) => {
     const especeData = especes.find((e) => e.id === plant.especeId)
@@ -83,19 +140,75 @@ export default function ParcelleDetailPage({ params }: Props) {
             Voir sur la carte
           </Button>
         </div>
-        {/* Objectif de la parcelle (At the top) */}
-        <Card className="bg-card border-border">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
-              Objectif de la parcelle
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="p-4 rounded-lg bg-secondary/30 border border-border">
-              <p className="text-foreground italic">"{parcelle.objectif || "Aucun objectif spécifique défini pour cette parcelle."}"</p>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Summary Blocks: Objectif & Évolution */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Objectif de la parcelle */}
+          <Card className="bg-card border-border shadow-sm h-full min-h-[100px] flex flex-col justify-center relative group">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg shrink-0">
+                  <Target className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wider font-semibold line-clamp-1">Objectif de la parcelle</p>
+                  <p className="text-sm font-bold text-foreground line-clamp-2 leading-tight">
+                    {parcelleObjectif ? `${parcelleObjectif.valeurActuelle} / ${parcelleObjectif.valeurCible} plants` : (parcelle.objectif || "Non défini")}
+                  </p>
+                </div>
+                
+                <Dialog open={isUpdateDialogOpen} onOpenChange={setIsUpdateDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors">
+                      <Pencil className="w-3.5 h-3.5" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-card border-border">
+                    <DialogHeader>
+                      <DialogTitle>Mettre à jour l'avancement</DialogTitle>
+                      <DialogDescription>
+                        Indiquez le nombre actuel de plants réussis pour cette parcelle.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="progress">Nombre de plants actuel</Label>
+                        <Input
+                          id="progress"
+                          type="number"
+                          value={tempValue}
+                          onChange={(e) => setTempValue(e.target.value)}
+                          className="bg-background border-border"
+                        />
+                        <p className="text-[11px] text-muted-foreground italic">Cible: {parcelleObjectif?.valeurCible} plants</p>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button onClick={handleUpdateValue} className="bg-primary text-white font-bold w-full">Enregistrer</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Évolution de la parcelle */}
+          <Card className="bg-card border-border shadow-sm h-full min-h-[100px] flex flex-col justify-center">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-chart-3/10 rounded-lg shrink-0">
+                  <TrendingUp className="w-5 h-5 text-chart-3" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wider font-semibold">Évolution</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-2xl font-bold text-foreground">{progress}%</p>
+                    <Progress value={progress} className="h-2 flex-1" />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Technical Info (Condensed) */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

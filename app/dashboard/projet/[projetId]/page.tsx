@@ -99,7 +99,7 @@ export default function ProjetDashboard({ params }: Props) {
           </div>
         </div>
 
-        {/* Unified Summary Blocks Grid (4 columns, then 3 centered or wrapping) */}
+        {/* Unified Summary Blocks Grid (4 columns, then remaining centered or wrapping) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* 1. Objectif du projet */}
           <Card className="bg-card border-border shadow-sm h-full min-h-[100px] flex flex-col justify-center">
@@ -116,24 +116,7 @@ export default function ProjetDashboard({ params }: Props) {
             </CardContent>
           </Card>
 
-          {/* 2. Objectif atteint */}
-          <Card className="bg-card border-border shadow-sm h-full min-h-[100px] flex flex-col justify-center">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-chart-1/10 rounded-lg shrink-0">
-                  <CheckSquare className="w-5 h-5 text-chart-1" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wider font-semibold">Objectif atteint</p>
-                  <p className="text-2xl font-bold text-foreground">
-                    {localObjectifs.filter(o => o.estValide).length} / {localObjectifs.length}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 3. Parcelles (Moved Up) */}
+          {/* 2. Parcelles (Moved to 2nd position) */}
           <Card
             className="bg-card border-border shadow-sm h-full min-h-[100px] flex flex-col justify-center cursor-pointer transition-colors hover:border-chart-2/50 hover:bg-accent/40"
             onClick={() => router.push(`/dashboard/projet/${projetId}/parcelles`)}
@@ -146,6 +129,24 @@ export default function ProjetDashboard({ params }: Props) {
                 <div>
                   <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wider font-semibold">Parcelles</p>
                   <p className="text-2xl font-bold text-foreground">{parcelles.length}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 3. Coopératives (Moved to 3rd position) */}
+          <Card
+            className="bg-card border-border shadow-sm h-full min-h-[100px] flex flex-col justify-center cursor-pointer transition-colors hover:border-chart-2/50 hover:bg-accent/40"
+            onClick={() => router.push("/dashboard/cooperatives")}
+          >
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-chart-2/10 rounded-lg shrink-0">
+                  <Users className="w-5 h-5 text-chart-2" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wider font-semibold">Coopératives</p>
+                  <p className="text-2xl font-bold text-foreground">{projectCoops.length}</p>
                 </div>
               </div>
             </CardContent>
@@ -200,24 +201,6 @@ export default function ProjetDashboard({ params }: Props) {
                 <div>
                   <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wider font-semibold">Taux survie</p>
                   <p className="text-2xl font-bold text-foreground">{tauxSurvieCalcule.toFixed(1)}%</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 7. Coopératives */}
-          <Card
-            className="bg-card border-border shadow-sm h-full min-h-[100px] flex flex-col justify-center cursor-pointer transition-colors hover:border-chart-2/50 hover:bg-accent/40"
-            onClick={() => router.push("/dashboard/cooperatives")}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-chart-2/10 rounded-lg shrink-0">
-                  <Users className="w-5 h-5 text-chart-2" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wider font-semibold">Coopératives</p>
-                  <p className="text-2xl font-bold text-foreground">{projectCoops.length}</p>
                 </div>
               </div>
             </CardContent>

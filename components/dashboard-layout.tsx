@@ -17,6 +17,7 @@ import {
   ChevronDown,
   Layers,
   Sprout,
+  Camera,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -89,6 +90,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       { href: `/dashboard/projet/${projetId}/especes`, label: "Espèces", icon: Leaf },
       { href: `/dashboard/projet/${projetId}/carte`, label: "Carte GPS", icon: Map },
       { href: `/dashboard/projet/${projetId}/monitoring`, label: "Monitoring", icon: BarChart3 },
+      { href: `/dashboard/projet/${projetId}/evolution`, label: "Évolution", icon: Camera },
     ]
     : []
 
