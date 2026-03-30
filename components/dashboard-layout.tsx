@@ -70,7 +70,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       case "administrateur":
         return "Administrateur"
       case "agriculteur":
-        return "Agriculteur"
+        return "Agent terrain"
       case "commanditaire":
         return "Commanditaire"
       default:
@@ -84,24 +84,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const projetNavItems = currentProjet
     ? [
-        { href: `/dashboard/projet/${projetId}`, label: "Vue d'ensemble", icon: LayoutDashboard },
-        { href: `/dashboard/projet/${projetId}/parcelles`, label: "Parcelles", icon: Layers },
-        { href: `/dashboard/projet/${projetId}/plants`, label: "Plants", icon: Sprout },
-        { href: `/dashboard/projet/${projetId}/especes`, label: "Espèces", icon: Leaf },
-        { href: `/dashboard/projet/${projetId}/carte`, label: "Carte GPS", icon: Map },
-        ...(isAdmin
-          ? [
-              { href: `/dashboard/projet/${projetId}/monitoring`, label: "Monitoring", icon: BarChart3 },
-            ]
-          : []),
-      ]
+      { href: `/dashboard/projet/${projetId}`, label: "Vue d'ensemble", icon: LayoutDashboard },
+      { href: `/dashboard/projet/${projetId}/parcelles`, label: "Parcelles", icon: Layers },
+      { href: `/dashboard/projet/${projetId}/especes`, label: "Espèces", icon: Leaf },
+      { href: `/dashboard/projet/${projetId}/carte`, label: "Carte GPS", icon: Map },
+      { href: `/dashboard/projet/${projetId}/monitoring`, label: "Monitoring", icon: BarChart3 },
+    ]
     : []
 
   const adminNavItems = isAdmin
     ? [
-        { href: "/dashboard/cooperatives", label: "Coopératives", icon: Building2 },
-        { href: "/dashboard/utilisateurs", label: "Utilisateurs", icon: Users },
-      ]
+      { href: "/dashboard/cooperatives", label: "Coopératives", icon: Building2 },
+      { href: "/dashboard/utilisateurs", label: "Utilisateurs", icon: Users },
+    ]
     : []
 
   const accountNavItems = [
@@ -116,11 +111,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           router.push(href)
           setMobileMenuOpen(false)
         }}
-        className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors w-full text-left ${
-          isActive
+        className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors w-full text-left ${isActive
             ? "bg-primary/12 text-foreground border border-primary/25"
             : "text-foreground hover:text-foreground hover:bg-accent"
-        }`}
+          }`}
       >
         <Icon className="w-4 h-4" />
         {label}
@@ -219,9 +213,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="min-h-screen app-gradient-shell flex">
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden md:flex flex-col bg-sidebar/92 backdrop-blur-md border-r border-sidebar-border transition-all duration-300 ${
-          sidebarOpen ? "w-64" : "w-0"
-        }`}
+        className={`hidden md:flex flex-col bg-sidebar/92 backdrop-blur-md border-r border-sidebar-border transition-all duration-300 ${sidebarOpen ? "w-64" : "w-0"
+          }`}
       >
         {sidebarOpen && <SidebarContent />}
       </aside>
@@ -236,9 +229,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Mobile Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar/96 backdrop-blur-md border-r border-sidebar-border transform transition-transform duration-300 md:hidden ${
-          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-sidebar/96 backdrop-blur-md border-r border-sidebar-border transform transition-transform duration-300 md:hidden ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <SidebarContent />
       </aside>

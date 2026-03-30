@@ -2,7 +2,8 @@
 
 import { useEffect, use, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Leaf, Search } from "lucide-react"
+import { Leaf, Search, ChevronDown } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
@@ -13,6 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/lib/auth-context"
 import { projets, especes } from "@/lib/mock-data"
 import { DashboardLayout } from "@/components/dashboard-layout"
@@ -26,6 +33,10 @@ export default function EspecesPage({ params }: Props) {
   const { user } = useAuth()
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
+  const [columnFilters, setColumnFilters] = useState({
+    nomCommun: "all",
+    nomScientifique: "all"
+  })
 
   const projet = projets.find((p) => p.id === projetId)
 
@@ -41,11 +52,16 @@ export default function EspecesPage({ params }: Props) {
 
   if (!user || !projet) return null
 
-  const filteredEspeces = especes.filter(
-    (e) =>
+  const filteredEspeces = especes.filter((e) => {
+    const matchesGlobal =
       e.nomCommun.toLowerCase().includes(searchTerm.toLowerCase()) ||
       e.nomScientifique.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+
+    const matchesColumnNom = columnFilters.nomCommun === "all" || e.nomCommun === columnFilters.nomCommun
+    const matchesColumnScientifique = columnFilters.nomScientifique === "all" || e.nomScientifique === columnFilters.nomScientifique
+
+    return matchesGlobal && matchesColumnNom && matchesColumnScientifique
+  })
 
   return (
     <DashboardLayout>
@@ -99,9 +115,51 @@ export default function EspecesPage({ params }: Props) {
               <Table>
                 <TableHeader>
                   <TableRow className="border-border">
-                    <TableHead className="text-muted-foreground">ID</TableHead>
-                    <TableHead className="text-muted-foreground">Nom commun</TableHead>
-                    <TableHead className="text-muted-foreground">Nom scientifique</TableHead>
+                    <TableHead className="text-muted-foreground w-20">ID</TableHead>
+                    <TableHead className="text-muted-foreground">
+                      <div className="flex items-center gap-2 py-1">
+                        <span>Nom commun</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({ ...columnFilters, nomCommun: "all" })}>
+                              Tout
+                            </DropdownMenuItem>
+                            {[...new Set(especes.map(e => e.nomCommun))].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({ ...columnFilters, nomCommun: val })}>
+                                {val}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-muted-foreground">
+                      <div className="flex items-center gap-2 py-1">
+                        <span>Nom scientifique</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({ ...columnFilters, nomScientifique: "all" })}>
+                              Tout
+                            </DropdownMenuItem>
+                            {[...new Set(especes.map(e => e.nomScientifique))].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({ ...columnFilters, nomScientifique: val })}>
+                                {val}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -135,7 +193,7 @@ export default function EspecesPage({ params }: Props) {
         </Card>
       </div>
     </DashboardLayout>
-    
+
   )
-  
+
 }

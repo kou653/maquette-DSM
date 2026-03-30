@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { TreePine, Leaf, Eye, EyeOff } from "lucide-react"
+import { TreePine, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -28,19 +28,39 @@ export default function LoginPage() {
     }
   }
 
+  const backgroundLogos = [
+    { top: "5%", left: "10%", rotate: "15deg", scale: 0.6, opacity: 0.03 },
+    { top: "15%", left: "85%", rotate: "-10deg", scale: 0.8, opacity: 0.04 },
+    { top: "40%", left: "5%", rotate: "25deg", scale: 0.5, opacity: 0.03 },
+    { top: "70%", left: "15%", rotate: "-20deg", scale: 0.7, opacity: 0.05 },
+    { top: "85%", left: "80%", rotate: "10deg", scale: 0.5, opacity: 0.03 },
+    { top: "30%", left: "75%", rotate: "45deg", scale: 0.9, opacity: 0.02 },
+    { top: "60%", left: "90%", rotate: "-35deg", scale: 0.4, opacity: 0.04 },
+    { top: "10%", left: "50%", rotate: "5deg", scale: 0.6, opacity: 0.03 },
+    { top: "80%", left: "45%", rotate: "30deg", scale: 0.6, opacity: 0.04 },
+    { top: "50%", left: "30%", rotate: "-15deg", scale: 0.8, opacity: 0.02 },
+  ]
+
   return (
-    <div className="min-h-screen app-gradient-shell flex items-center justify-center p-4">
-      {/* Background pattern */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 opacity-10">
-          <TreePine className="w-32 h-32 text-primary" />
-        </div>
-        <div className="absolute bottom-20 right-10 opacity-10">
-          <Leaf className="w-24 h-24 text-primary" />
-        </div>
-        <div className="absolute top-1/2 left-1/4 opacity-5">
-          <TreePine className="w-48 h-48 text-primary" />
-        </div>
+    <div className="min-h-screen app-gradient-shell flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Scattered Logos */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {backgroundLogos.map((style, i) => (
+          <img
+            key={i}
+            src="/Fichier 3.png"
+            alt=""
+            className="absolute grayscale select-none"
+            style={{
+              top: style.top,
+              left: style.left,
+              transform: `rotate(${style.rotate}) scale(${style.scale})`,
+              opacity: style.opacity,
+              width: "100px",
+              height: "auto",
+            }}
+          />
+        ))}
       </div>
 
       <Card className="w-full max-w-md relative z-10 border-border bg-card/95 backdrop-blur shadow-lg shadow-primary/5">
@@ -117,8 +137,8 @@ export default function LoginPage() {
               Comptes de démonstration :
             </p>
             <div className="mt-2 space-y-1 text-xs text-foreground/75">
-              <p><span className="text-foreground font-medium">Admin :</span> admin@reforest.com / admin123</p>
-              <p><span className="text-foreground font-medium">Agriculteur :</span> agriculteur@reforest.com / agri123</p>
+              <p><span className="text-foreground font-medium">Administrateur :</span> admin@reforest.com / admin123</p>
+              <p><span className="text-foreground font-medium">Agent terrain :</span> agriculteur@reforest.com / agri123</p>
               <p><span className="text-foreground font-medium">Commanditaire :</span> commanditaire@reforest.com / cmd123</p>
             </div>
           </div>

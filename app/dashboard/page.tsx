@@ -62,7 +62,10 @@ export default function DashboardPage() {
             <p className="text-foreground/70">Vue d'ensemble de tous les projets</p>
           </div>
           {isAdmin && (
-            <Button className="bg-primary hover:bg-[var(--forest-green-hover)] text-primary-foreground">
+            <Button 
+              className="bg-primary hover:bg-[var(--forest-green-hover)] text-primary-foreground"
+              onClick={() => router.push("/dashboard/projet/nouveau")}
+            >
               <Plus className="w-4 h-4 mr-2" />
               Ajouter un projet
             </Button>

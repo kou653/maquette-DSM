@@ -1,4 +1,4 @@
-import type { Projet, Parcelle, Plant, Espece, Cooperative, User, MonitoringData } from "./types"
+import type { Projet, Parcelle, Plant, Espece, Cooperative, User, MonitoringData, EspeceDocumentation, Objectif } from "./types"
 
 export const projets: Projet[] = [
   {
@@ -12,6 +12,7 @@ export const projets: Projet[] = [
     totalParcelles: 45,
     totalPlants: 12500,
     tauxSurvie: 87.5,
+    objectif: "50 plants",
   },
   {
     id: "2",
@@ -40,9 +41,9 @@ export const projets: Projet[] = [
 ]
 
 export const parcelles: Parcelle[] = [
-  { id: "p1", nom: "Parcelle Nord A1", ville: "Ouagadougou", cooperative: "Coop Sahel Vert", projetId: "1", superficie: 5.2, coordonnees: { lat: 12.3714, lng: -1.5197 } },
-  { id: "p2", nom: "Parcelle Nord A2", ville: "Ouagadougou", cooperative: "Coop Sahel Vert", projetId: "1", superficie: 4.8, coordonnees: { lat: 12.3814, lng: -1.5097 } },
-  { id: "p3", nom: "Parcelle Est B1", ville: "Fada N'Gourma", cooperative: "Coop Est Solidaire", projetId: "1", superficie: 6.1, coordonnees: { lat: 12.0614, lng: 0.3497 } },
+  { id: "p1", nom: "Parcelle Nord A1", ville: "Ouagadougou", cooperative: "Coop Sahel Vert", projetId: "1", superficie: 5.2, coordonnees: { lat: 12.3714, lng: -1.5197 }, objectif: "Planter 2000 Acacias" },
+  { id: "p2", nom: "Parcelle Nord A2", ville: "Ouagadougou", cooperative: "Coop Sahel Vert", projetId: "1", superficie: 4.8, coordonnees: { lat: 12.3814, lng: -1.5097 }, objectif: "Planter 1500 Baobabs" },
+  { id: "p3", nom: "Parcelle Est B1", ville: "Fada N'Gourma", cooperative: "Coop Est Solidaire", projetId: "1", superficie: 6.1, coordonnees: { lat: 12.0614, lng: 0.3497 }, objectif: "Planter 3000 Karités" },
   { id: "p4", nom: "Parcelle Parakou 1", ville: "Parakou", cooperative: "Coop Borgou", projetId: "2", superficie: 3.5, coordonnees: { lat: 9.3400, lng: 2.6300 } },
   { id: "p5", nom: "Parcelle Natitingou 1", ville: "Natitingou", cooperative: "Coop Atacora", projetId: "2", superficie: 4.2, coordonnees: { lat: 10.3000, lng: 1.3800 } },
   { id: "p6", nom: "Parcelle Abidjan Nord", ville: "Abidjan", cooperative: "Coop Lagunes", projetId: "3", superficie: 7.8, coordonnees: { lat: 5.3600, lng: -4.0083 } },
@@ -71,12 +72,12 @@ export const plants: Plant[] = [
 ]
 
 export const cooperatives: Cooperative[] = [
-  { id: "c1", nom: "Coop Sahel Vert", entreprise: "Agro Sahel Services", contact: "+226 70 12 34 56", email: "sahel.vert@coop.bf", ville: "Ouagadougou", village: "Koubri" },
-  { id: "c2", nom: "Coop Est Solidaire", entreprise: "Terres de l'Est", contact: "+226 70 23 45 67", email: "est.solidaire@coop.bf", ville: "Fada N'Gourma", village: "Diapangou" },
-  { id: "c3", nom: "Coop Borgou", entreprise: "Borgou Agro Conseil", contact: "+229 97 12 34 56", email: "borgou@coop.bj", ville: "Parakou", village: "Nima" },
-  { id: "c4", nom: "Coop Atacora", entreprise: "Atacora Nature", contact: "+229 97 23 45 67", email: "atacora@coop.bj", ville: "Natitingou", village: "Kotopounga" },
-  { id: "c5", nom: "Coop Lagunes", entreprise: "Lagunes Reforest", contact: "+225 07 12 34 56", email: "lagunes@coop.ci", ville: "Abidjan", village: "Anyama" },
-  { id: "c6", nom: "Coop Vallée Bandama", entreprise: "Bandama Agroforest", contact: "+225 07 23 45 67", email: "bandama@coop.ci", ville: "Bouaké", village: "Béoumi" },
+  { id: "c1", nom: "Coop Sahel Vert", entreprise: "Nestlé", contact: "+226 70 12 34 56", email: "sahel.vert@coop.bf", ville: "Ouagadougou", village: "Koubri" },
+  { id: "c2", nom: "Coop Est Solidaire", entreprise: "Sodefor", contact: "+226 70 23 45 67", email: "est.solidaire@coop.bf", ville: "Fada N'Gourma", village: "Diapangou" },
+  { id: "c3", nom: "Coop Borgou", entreprise: "Nestlé", contact: "+229 97 12 34 56", email: "borgou@coop.bj", ville: "Parakou", village: "Nima" },
+  { id: "c4", nom: "Coop Atacora", entreprise: "Nestlé", contact: "+229 97 23 45 67", email: "atacora@coop.bj", ville: "Natitingou", village: "Kotopounga" },
+  { id: "c5", nom: "Coop Lagunes", entreprise: "Nestlé", contact: "+225 07 12 34 56", email: "lagunes@coop.ci", ville: "Abidjan", village: "Anyama" },
+  { id: "c6", nom: "Coop Vallée Bandama", entreprise: "Anader", contact: "+225 07 23 45 67", email: "bandama@coop.ci", ville: "Bouaké", village: "Béoumi" },
 ]
 
 export const users: User[] = [
@@ -85,6 +86,63 @@ export const users: User[] = [
   { id: "3", nom: "Pierre Mensah", email: "commanditaire@reforest.com", role: "commanditaire", projetsAffectes: ["1"] },
   { id: "4", nom: "Fatou Diallo", email: "fatou@reforest.com", role: "agriculteur", projetsAffectes: ["2", "3"] },
   { id: "5", nom: "Kwame Asante", email: "kwame@reforest.com", role: "commanditaire", projetsAffectes: ["3"] },
+]
+
+export const especeDocumentations: EspeceDocumentation[] = [
+  {
+    id: "ed1",
+    projetId: "1",
+    especeId: "e2",
+    etat: "vivant",
+    notes: "Les baobabs montrent une excellente résistance à la chaleur cette saison.",
+    auteur: "Marie Koné",
+    date: "2024-05-12T10:00:00Z"
+  },
+  {
+    id: "ed2",
+    projetId: "1",
+    especeId: "e3",
+    etat: "mort",
+    notes: "Certains plants de karité n'ont pas survécu à cause d'attaques de termites au niveau des racines.",
+    auteur: "Marie Koné",
+    date: "2024-05-14T09:30:00Z"
+  }
+]
+
+export const objectifs: Objectif[] = [
+  {
+    id: "obj1",
+    projetId: "1",
+    parcelleId: "p1",
+    titre: "",
+    valeurCible: 2000,
+    valeurActuelle: 1800,
+    unite: "plants",
+    estValide: false,
+    dateCreation: "2024-01-20T08:00:00Z"
+  },
+  {
+    id: "obj2",
+    projetId: "1",
+    parcelleId: "p2",
+    titre: "",
+    valeurCible: 1500,
+    valeurActuelle: 1500,
+    unite: "plants",
+    estValide: true,
+    dateCreation: "2024-01-21T09:00:00Z"
+  },
+  {
+    id: "obj3",
+    projetId: "1",
+    parcelleId: "p3",
+    titre: "",
+    valeurCible: 3000,
+    valeurActuelle: 2100,
+    unite: "plants",
+    estValide: false,
+    dateCreation: "2024-01-22T10:00:00Z"
+  },
 ]
 
 export const monitoringData: MonitoringData[] = [
@@ -201,6 +259,10 @@ export function getPlantsByProjet(projetId: string): Plant[] {
   return plants.filter((p) => projetParcelles.includes(p.parcelleId))
 }
 
+export function getPlantsByParcelle(parcelleId: string): Plant[] {
+  return plants.filter((p) => p.parcelleId === parcelleId)
+}
+
 export function getMonitoringByParcelleAndEspece(parcelleId: string, especeId: string): MonitoringData | undefined {
   const entry = monitoringData.find((m) => m.parcelleId === parcelleId && m.especeId === especeId)
   if (!entry) return undefined
@@ -255,9 +317,56 @@ export function getMonitoringByParcelle(parcelleId: string): MonitoringData | nu
     history,
     documentation: parcelleMonitoring.flatMap((m) => m.documentation || []).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
   }
-  aggregated.tauxSurvie = aggregated.plantsMisEnTerre > 0 
-    ? Math.round((aggregated.plantsVivants / aggregated.plantsMisEnTerre) * 1000) / 10 
+  aggregated.tauxSurvie = aggregated.plantsMisEnTerre > 0
+    ? Math.round((aggregated.plantsVivants / aggregated.plantsMisEnTerre) * 1000) / 10
     : 0
-  
+
   return aggregated
+}
+
+export function addPlant(plant: Omit<Plant, "id">): Plant {
+  const newPlant = { ...plant, id: `pl${plants.length + 1}-${Date.now()}` }
+  plants.push(newPlant)
+  return newPlant
+}
+
+export function addEspeceDocumentation(doc: Omit<EspeceDocumentation, "id">): EspeceDocumentation {
+  const newDoc = { ...doc, id: `ed${especeDocumentations.length + 1}-${Date.now()}` }
+  especeDocumentations.push(newDoc)
+  return newDoc
+}
+
+export function getDocumentationsByProjetAndEtat(projetId: string, etat: "vivant" | "mort"): EspeceDocumentation[] {
+  return especeDocumentations.filter((d) => d.projetId === projetId && d.etat === etat)
+}
+
+export function addObjectif(obj: Omit<Objectif, "id">): Objectif {
+  const newObj = { ...obj, id: `obj${objectifs.length + 1}-${Date.now()}` }
+  objectifs.push(newObj)
+  return newObj
+}
+
+export function toggleObjectifValidation(id: string): void {
+  const obj = objectifs.find(o => o.id === id)
+  if (obj) {
+    obj.estValide = !obj.estValide
+  }
+}
+
+export function editObjectif(id: string, titre: string): void {
+  const obj = objectifs.find(o => o.id === id)
+  if (obj) {
+    obj.titre = titre
+  }
+}
+
+export function deleteObjectif(id: string): void {
+  const index = objectifs.findIndex(o => o.id === id)
+  if (index !== -1) {
+    objectifs.splice(index, 1)
+  }
+}
+
+export function getObjectifsByProjet(projetId: string): Objectif[] {
+  return objectifs.filter(o => o.projetId === projetId)
 }

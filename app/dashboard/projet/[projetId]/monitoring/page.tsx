@@ -179,9 +179,6 @@ export default function MonitoringPage({ params }: Props) {
       router.push("/")
       return
     }
-    if (user.role !== "administrateur") {
-      router.push(`/dashboard/projet/${projetId}`)
-    }
   }, [user, projetId, router])
 
   useEffect(() => {
@@ -189,7 +186,6 @@ export default function MonitoringPage({ params }: Props) {
   }, [selectedParcelle])
 
   if (!user || !projet) return null
-  if (user.role !== "administrateur") return null
 
   const selectedMonitoring = selectedParcelle
     ? selectedEspece && selectedEspece !== "all"
@@ -293,9 +289,15 @@ export default function MonitoringPage({ params }: Props) {
           </p>
         </div>
 
-        <Badge className="bg-primary/20 text-foreground border-primary/30">
-          Acces Administrateur uniquement
-        </Badge>
+        {user.role === "commanditaire" ? (
+          <Badge variant="secondary" className="bg-secondary text-muted-foreground border-border">
+            Vue en lecture seule
+          </Badge>
+        ) : (
+          <Badge className="bg-primary/20 text-foreground border-primary/30">
+            Accès complet
+          </Badge>
+        )}
 
         <Card className="bg-card border-border">
           <CardHeader>
@@ -413,17 +415,18 @@ export default function MonitoringPage({ params }: Props) {
                     Le graphique montre l'evolution mensuelle des plants plantes, vivants et morts.
                   </p>
                 </div>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      size="sm"
-                      className="bg-primary hover:bg-[var(--forest-green-hover)]"
-                      disabled={!selectedParcelle || !selectedEspece || selectedEspece === "all"}
-                    >
-                      <Plus className="w-4 h-4 mr-1" />
-                      Ajouter un releve
-                    </Button>
-                  </DialogTrigger>
+                {user.role !== "commanditaire" && (
+                  <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        size="sm"
+                        className="bg-primary hover:bg-[var(--forest-green-hover)]"
+                        disabled={!selectedParcelle || !selectedEspece || selectedEspece === "all"}
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Ajouter un releve
+                      </Button>
+                    </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>Ajouter un releve mensuel</DialogTitle>
@@ -489,7 +492,8 @@ export default function MonitoringPage({ params }: Props) {
                       </div>
                     </div>
                   </DialogContent>
-                </Dialog>
+                  </Dialog>
+                )}
               </CardHeader>
               <CardContent>
                 {selectedEspece === "all" ? (

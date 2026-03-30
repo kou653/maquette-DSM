@@ -2,7 +2,7 @@
 
 import { useEffect, use, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Sprout, Search, MapPin, Leaf, CalendarDays, CheckCircle2, XCircle } from "lucide-react"
+import { Sprout, Search, MapPin, Leaf, CalendarDays, CheckCircle2, XCircle, Plus, ChevronDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -15,6 +15,12 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -24,6 +30,7 @@ import {
 import { useAuth } from "@/lib/auth-context"
 import { projets, getPlantsByProjet, especes, getParcellesByProjet } from "@/lib/mock-data"
 import { DashboardLayout } from "@/components/dashboard-layout"
+import { Button } from "@/components/ui/button"
 
 interface Props {
   params: Promise<{ projetId: string }>
@@ -37,6 +44,11 @@ export default function PlantsPage({ params }: Props) {
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<"all" | "vivant" | "mort">("all")
   const [especeFilter, setEspeceFilter] = useState<string>("all")
+  const [columnFilters, setColumnFilters] = useState({
+    espece: "all",
+    parcelle: "all",
+    ville: "all"
+  })
 
   const projet = projets.find((p) => p.id === projetId)
   const plants = getPlantsByProjet(projetId)
@@ -64,13 +76,19 @@ export default function PlantsPage({ params }: Props) {
   if (!user || !projet) return null
 
   const filteredPlants = plants.filter((plant) => {
-    const matchesSearch =
+    const matchesGlobal =
       plant.especeNom.toLowerCase().includes(searchTerm.toLowerCase()) ||
       plant.parcelleNom.toLowerCase().includes(searchTerm.toLowerCase()) ||
       plant.ville.toLowerCase().includes(searchTerm.toLowerCase())
+
+    const matchesColumnEspece = columnFilters.espece === "all" || plant.especeNom === columnFilters.espece
+    const matchesColumnParcelle = columnFilters.parcelle === "all" || plant.parcelleNom === columnFilters.parcelle
+    const matchesColumnVille = columnFilters.ville === "all" || plant.ville === columnFilters.ville
+
     const matchesStatus = statusFilter === "all" || plant.status === statusFilter
     const matchesEspece = especeFilter === "all" || plant.especeId === especeFilter
-    return matchesSearch && matchesStatus && matchesEspece
+
+    return matchesGlobal && matchesColumnEspece && matchesColumnParcelle && matchesColumnVille && matchesStatus && matchesEspece
   })
 
   const plantsVivants = plants.filter((p) => p.status === "vivant").length
@@ -81,18 +99,31 @@ export default function PlantsPage({ params }: Props) {
     (id) => especes.find((e) => e.id === id)!
   )
 
+  const canAddPlant = user.role === "administrateur" || user.role === "agriculteur"
+
   return (
     <DashboardLayout>
       <div className="p-6 space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <Sprout className="w-6 h-6 text-primary" />
-            Plants
-          </h1>
-          <p className="text-muted-foreground">
-            Liste des plants du projet {projet.nom}
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+              <Sprout className="w-6 h-6 text-primary" />
+              Plants
+            </h1>
+            <p className="text-muted-foreground">
+              Liste des plants du projet {projet.nom}
+            </p>
+          </div>
+          {canAddPlant && (
+            <Button
+              className="bg-primary hover:bg-[var(--forest-green-hover)] text-primary-foreground"
+              onClick={() => router.push(`/dashboard/projet/${projetId}/plants/nouveau`)}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Ajouter un plant
+            </Button>
+          )}
         </div>
 
         {/* Stats */}
@@ -115,7 +146,7 @@ export default function PlantsPage({ params }: Props) {
           </Card>
           <Card
             className="bg-card border-border cursor-pointer transition-colors hover:border-primary/40 hover:bg-accent/40"
-            onClick={() => setStatusFilter("vivant")}
+            onClick={() => router.push(`/dashboard/projet/${projetId}/statut?etat=vivant`)}
           >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
@@ -131,7 +162,7 @@ export default function PlantsPage({ params }: Props) {
           </Card>
           <Card
             className="bg-card border-border cursor-pointer transition-colors hover:border-destructive/40 hover:bg-destructive/5"
-            onClick={() => setStatusFilter("mort")}
+            onClick={() => router.push(`/dashboard/projet/${projetId}/statut?etat=mort`)}
           >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
@@ -194,12 +225,75 @@ export default function PlantsPage({ params }: Props) {
               <Table>
                 <TableHeader>
                   <TableRow className="border-border">
-                    <TableHead className="text-muted-foreground">ID / Espèce</TableHead>
-                    <TableHead className="text-muted-foreground">Nom scientifique</TableHead>
-                    <TableHead className="text-muted-foreground">Parcelle</TableHead>
-                    <TableHead className="text-muted-foreground">Ville</TableHead>
-                    <TableHead className="text-muted-foreground">Coordonnées GPS</TableHead>
-                    <TableHead className="text-muted-foreground">Date plantation</TableHead>
+                    <TableHead className="text-muted-foreground min-w-[180px]">
+                      <div className="flex items-center gap-2 py-1">
+                        <span>Espèce</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({...columnFilters, espece: "all"})}>
+                              Tout
+                            </DropdownMenuItem>
+                            {[...new Set(plants.map(p => p.especeNom))].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({...columnFilters, espece: val})}>
+                                {val}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-muted-foreground min-w-[150px]">Nom scientifique</TableHead>
+                    <TableHead className="text-muted-foreground min-w-[150px]">
+                      <div className="flex items-center gap-2 py-1">
+                        <span>Parcelle</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({...columnFilters, parcelle: "all"})}>
+                              Tout
+                            </DropdownMenuItem>
+                            {[...new Set(plants.map(p => p.parcelleNom))].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({...columnFilters, parcelle: val})}>
+                                {val}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-muted-foreground min-w-[120px]">
+                      <div className="flex items-center gap-2 py-1">
+                        <span>Ville</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({...columnFilters, ville: "all"})}>
+                              Tout
+                            </DropdownMenuItem>
+                            {[...new Set(plants.map(p => p.ville))].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({...columnFilters, ville: val})}>
+                                {val}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-muted-foreground min-w-[120px]">GPS</TableHead>
+                    <TableHead className="text-muted-foreground min-w-[120px]">Date</TableHead>
                     <TableHead className="text-muted-foreground">État</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -207,55 +301,56 @@ export default function PlantsPage({ params }: Props) {
                   {filteredPlants.map((plant) => {
                     const especeData = especes.find((e) => e.id === plant.especeId)
                     return (
-                    <TableRow key={plant.id} className="border-border">
-                      <TableCell>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <Leaf className="w-4 h-4 text-primary" />
-                            <span className="font-medium text-foreground">{plant.especeNom}</span>
+                      <TableRow key={plant.id} className="border-border">
+                        <TableCell>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <Leaf className="w-4 h-4 text-primary" />
+                              <span className="font-medium text-foreground">{plant.especeNom}</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground">{plant.id}</p>
                           </div>
-                          <p className="text-xs text-muted-foreground">{plant.id}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground italic">
-                        {especeData?.nomScientifique || "-"}
-                      </TableCell>
-                      <TableCell className="text-foreground">{plant.parcelleNom}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2 text-foreground">
-                          <MapPin className="w-4 h-4 text-muted-foreground" />
-                          {plant.ville}
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-mono text-sm text-muted-foreground">
-                        {plant.coordonnees.lat.toFixed(4)}, {plant.coordonnees.lng.toFixed(4)}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2 text-foreground">
-                          <CalendarDays className="w-4 h-4 text-muted-foreground" />
-                          {new Date(plant.datePlantation).toLocaleDateString("fr-FR")}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={plant.status === "vivant" ? "default" : "destructive"}
-                          className={
-                            plant.status === "vivant"
-                              ? "bg-primary/20 text-foreground border-primary/30"
-                              : "bg-destructive/20 text-foreground border-destructive/30"
-                          }
-                        >
-                          {plant.status === "vivant" ? (
-                            <CheckCircle2 className="w-3 h-3 mr-1" />
-                          ) : (
-                            <XCircle className="w-3 h-3 mr-1" />
-                          )}
-                          {plant.status === "vivant" ? "Vivant" : "Mort"}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  )})}
-                  
+                        </TableCell>
+                        <TableCell className="text-muted-foreground italic">
+                          {especeData?.nomScientifique || "-"}
+                        </TableCell>
+                        <TableCell className="text-foreground">{plant.parcelleNom}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2 text-foreground">
+                            <MapPin className="w-4 h-4 text-muted-foreground" />
+                            {plant.ville}
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-mono text-sm text-muted-foreground">
+                          {plant.coordonnees.lat.toFixed(4)}, {plant.coordonnees.lng.toFixed(4)}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2 text-foreground">
+                            <CalendarDays className="w-4 h-4 text-muted-foreground" />
+                            {new Date(plant.datePlantation).toLocaleDateString("fr-FR")}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={plant.status === "vivant" ? "default" : "destructive"}
+                            className={
+                              plant.status === "vivant"
+                                ? "bg-primary/20 text-foreground border-primary/30"
+                                : "bg-destructive/20 text-foreground border-destructive/30"
+                            }
+                          >
+                            {plant.status === "vivant" ? (
+                              <CheckCircle2 className="w-3 h-3 mr-1" />
+                            ) : (
+                              <XCircle className="w-3 h-3 mr-1" />
+                            )}
+                            {plant.status === "vivant" ? "Vivant" : "Mort"}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+
                   {filteredPlants.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center text-muted-foreground py-8">

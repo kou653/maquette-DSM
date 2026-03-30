@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Building2, Search, MapPin, Phone, Mail, Plus, Pencil, Trash2 } from "lucide-react"
+import { Building2, Search, MapPin, Phone, Mail, Plus, Pencil, Trash2, ChevronDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -15,6 +15,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
   Dialog,
   DialogContent,
@@ -31,6 +37,12 @@ export default function CooperativesPage() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [columnFilters, setColumnFilters] = useState({
+    nom: "all",
+    entreprise: "all",
+    ville: "all",
+    village: "all"
+  })
 
   useEffect(() => {
     if (!user) {
@@ -44,15 +56,22 @@ export default function CooperativesPage() {
 
   if (!user || user.role !== "administrateur") return null
 
-  const filteredCooperatives = cooperatives.filter(
-    (c) =>
+  const filteredCooperatives = cooperatives.filter((c) => {
+    const matchesGlobal =
       c.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.entreprise.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.ville.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.village.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.contact.includes(searchTerm)
-  )
+
+    const matchesColumnNom = columnFilters.nom === "all" || c.nom === columnFilters.nom
+    const matchesColumnEntreprise = columnFilters.entreprise === "all" || c.entreprise === columnFilters.entreprise
+    const matchesColumnVille = columnFilters.ville === "all" || c.ville === columnFilters.ville
+    const matchesColumnVillage = columnFilters.village === "all" || c.village === columnFilters.village
+
+    return matchesGlobal && matchesColumnNom && matchesColumnEntreprise && matchesColumnVille && matchesColumnVillage
+  })
 
   return (
     <DashboardLayout>
@@ -164,12 +183,96 @@ export default function CooperativesPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="border-border">
-                    <TableHead className="text-muted-foreground">Nom</TableHead>
-                    <TableHead className="text-muted-foreground">Entreprise</TableHead>
-                    <TableHead className="text-muted-foreground">Contact</TableHead>
-                    <TableHead className="text-muted-foreground">Email</TableHead>
-                    <TableHead className="text-muted-foreground">Ville</TableHead>
-                    <TableHead className="text-muted-foreground">Village</TableHead>
+                    <TableHead className="text-muted-foreground min-w-[150px]">
+                      <div className="flex items-center gap-2 py-1">
+                        <span>Nom</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({ ...columnFilters, nom: "all" })}>
+                              Tout
+                            </DropdownMenuItem>
+                            {[...new Set(cooperatives.map(c => c.nom))].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({ ...columnFilters, nom: val })}>
+                                {val}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-muted-foreground min-w-[150px]">
+                      <div className="flex items-center gap-2 py-1">
+                        <span>Entreprise</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({ ...columnFilters, entreprise: "all" })}>
+                              Tout
+                            </DropdownMenuItem>
+                            {[...new Set(cooperatives.map(c => c.entreprise))].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({ ...columnFilters, entreprise: val })}>
+                                {val}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-muted-foreground min-w-[120px]">Contact</TableHead>
+                    <TableHead className="text-muted-foreground min-w-[180px]">Email</TableHead>
+                    <TableHead className="text-muted-foreground min-w-[100px]">
+                      <div className="flex items-center gap-2 py-1">
+                        <span>Ville</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({ ...columnFilters, ville: "all" })}>
+                              Tout
+                            </DropdownMenuItem>
+                            {[...new Set(cooperatives.map(c => c.ville))].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({ ...columnFilters, ville: val })}>
+                                {val}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-muted-foreground min-w-[100px]">
+                      <div className="flex items-center gap-2 py-1">
+                        <span>Village</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({ ...columnFilters, village: "all" })}>
+                              Tout
+                            </DropdownMenuItem>
+                            {[...new Set(cooperatives.map(c => c.village))].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({ ...columnFilters, village: val })}>
+                                {val}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
                     <TableHead className="text-muted-foreground text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>

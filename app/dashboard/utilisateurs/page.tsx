@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Users, Search, Mail, Shield, FolderKanban, Plus, Pencil, Trash2 } from "lucide-react"
+import { Users, Search, Mail, Shield, FolderKanban, Plus, Pencil, Trash2, ChevronDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -15,6 +15,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
   Dialog,
   DialogContent,
@@ -42,6 +48,10 @@ export default function UtilisateursPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [newUserRole, setNewUserRole] = useState<string>("")
   const [selectedProjects, setSelectedProjects] = useState<string[]>([])
+  const [columnFilters, setColumnFilters] = useState({
+    nom: "all",
+    role: "all"
+  })
 
   useEffect(() => {
     if (!user) {
@@ -58,17 +68,20 @@ export default function UtilisateursPage() {
   const roleFilter = searchParams.get("role")
 
   const filteredUsers = users.filter((u) => {
-    const matchesSearch =
+    const matchesGlobal =
       u.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.role.toLowerCase().includes(searchTerm.toLowerCase())
+
+    const matchesColumnNom = columnFilters.nom === "all" || u.nom === columnFilters.nom
+    const matchesColumnRole = columnFilters.role === "all" || u.role === columnFilters.role
 
     const matchesRole =
       !roleFilter ||
       roleFilter === "all" ||
       u.role === roleFilter
 
-    return matchesSearch && matchesRole
+    return matchesGlobal && matchesColumnNom && matchesColumnRole && matchesRole
   })
 
   const getRoleBadgeColor = (role: string) => {
@@ -89,7 +102,7 @@ export default function UtilisateursPage() {
       case "administrateur":
         return "Administrateur"
       case "agriculteur":
-        return "Agriculteur"
+        return "Agent terrain"
       case "commanditaire":
         return "Commanditaire"
       default:
@@ -163,7 +176,7 @@ export default function UtilisateursPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="administrateur">Administrateur</SelectItem>
-                        <SelectItem value="agriculteur">Agriculteur</SelectItem>
+                        <SelectItem value="agriculteur">Agent terrain</SelectItem>
                         <SelectItem value="commanditaire">Commanditaire</SelectItem>
                       </SelectContent>
                     </Select>
@@ -249,7 +262,7 @@ export default function UtilisateursPage() {
                   <Users className="w-5 h-5 text-chart-3" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Agriculteurs</p>
+                  <p className="text-sm text-muted-foreground">Agents terrain</p>
                   <p className="text-2xl font-bold text-foreground">{agriculteurCount}</p>
                 </div>
               </div>
@@ -285,9 +298,55 @@ export default function UtilisateursPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="border-border">
-                    <TableHead className="text-muted-foreground">Nom</TableHead>
-                    <TableHead className="text-muted-foreground">Email</TableHead>
-                    <TableHead className="text-muted-foreground">Rôle</TableHead>
+                    <TableHead className="text-muted-foreground">
+                      <div className="flex items-center gap-2 py-2">
+                        <span>Nom</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({ ...columnFilters, nom: "all" })}>
+                              Tout
+                            </DropdownMenuItem>
+                            {[...new Set(users.map(u => u.nom))].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({ ...columnFilters, nom: val })}>
+                                {val}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-muted-foreground">
+                      <div className="flex items-center gap-2 py-2">
+                        <span>Email</span>
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-muted-foreground">
+                      <div className="flex items-center gap-2 py-2">
+                        <span>Rôle</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="bg-popover border-border">
+                            <DropdownMenuItem onClick={() => setColumnFilters({ ...columnFilters, role: "all" })}>
+                              Tout
+                            </DropdownMenuItem>
+                            {["administrateur", "agriculteur", "commanditaire"].map(val => (
+                              <DropdownMenuItem key={val} onClick={() => setColumnFilters({ ...columnFilters, role: val })}>
+                                {val === "agriculteur" ? "Agent terrain" : val.charAt(0) + val.slice(1)}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableHead>
                     <TableHead className="text-muted-foreground">Projets affectés</TableHead>
                     <TableHead className="text-muted-foreground text-right">Actions</TableHead>
                   </TableRow>

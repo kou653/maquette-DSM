@@ -19,6 +19,7 @@ export interface Projet {
   totalParcelles: number
   totalPlants: number
   tauxSurvie: number
+  objectif?: string
 }
 
 export interface Parcelle {
@@ -29,6 +30,7 @@ export interface Parcelle {
   projetId: string
   superficie: number
   coordonnees: { lat: number; lng: number }
+  objectif?: string
 }
 
 export interface Plant {
@@ -77,4 +79,26 @@ export interface MonitoringData {
     photos: string[]
     date: string
   }[]
+}
+
+export interface EspeceDocumentation {
+  id: string
+  projetId: string
+  especeId: string
+  etat: "vivant" | "mort"
+  notes: string
+  auteur: string
+  date: string
+}
+
+export interface Objectif {
+  id: string
+  projetId: string
+  parcelleId?: string
+  titre: string
+  valeurCible: number
+  valeurActuelle: number
+  unite: string
+  estValide: boolean
+  dateCreation: string
 }
